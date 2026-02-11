@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Header } from "../Header";
+import { Header, type HeaderProps } from "../Header";
 import type { BrandDetails } from "../types";
 
 const sampleDetails: BrandDetails = {
@@ -11,7 +11,15 @@ const sampleDetails: BrandDetails = {
   gmail: "hello@brand-shell.dev",
   github: "https://github.com/example",
   twitter: "https://twitter.com/example",
+  discord: "https://discord.gg/brandshell",
+  navLinks: [
+    { label: "Blog", href: "https://brand-shell.dev/blog" },
+    { label: "Docs", href: "https://brand-shell.dev/docs" },
+    { label: "About", href: "https://brand-shell.dev/about" },
+  ],
 };
+
+type HeaderStoryProps = HeaderProps & { socialIconSize?: string };
 
 const meta = {
   title: "Brand Shell/Header",
@@ -20,12 +28,28 @@ const meta = {
   args: {
     details: sampleDetails,
     theme: null,
+    socialIconSize: "2.5rem",
   },
-} satisfies Meta<typeof Header>;
+  argTypes: {
+    socialIconSize: {
+      control: { type: "text" },
+      description: "CSS size for circular social buttons (e.g. 2.25rem).",
+    },
+  },
+  render: ({ socialIconSize, theme, ...rest }) => (
+    <Header
+      {...rest}
+      theme={{
+        ...(theme ?? {}),
+        socialIconSize,
+      }}
+    />
+  ),
+} satisfies Meta<HeaderStoryProps>;
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<HeaderStoryProps>;
 
 export const Default: Story = {};
 
@@ -38,6 +62,7 @@ export const CustomTheme: Story = {
       linkColor: "#0891b2",
       fontFamily: '"Playfair Display", serif',
     },
+    socialIconSize: "2rem",
   },
 };
 

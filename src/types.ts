@@ -1,11 +1,26 @@
 /**
  * Schema for header/footer content. Caller passes these; package does not store them.
  */
+export interface BrandNavLink {
+  /** Visible label (e.g. Blog, Docs, About) */
+  label: string;
+  /** Destination URL or path */
+  href: string;
+  /** Optional custom aria-label for accessibility */
+  ariaLabel?: string;
+  /** Optional target attribute (defaults to _self) */
+  target?: "_blank" | "_self" | "_parent" | "_top";
+  /** Optional rel attribute (e.g. noopener) */
+  rel?: string;
+}
+
 export interface BrandDetails {
   /** Display name (e.g. in header and footer) */
   name: string;
   /** Optional home URL (header name links here when set) */
   homeHref?: string;
+  /** Primary nav links shown in the header/footer text nav */
+  navLinks?: BrandNavLink[];
   /** LinkedIn profile URL */
   linkedin?: string;
   /** Email address (e.g. mailto: or plain) */
@@ -14,6 +29,8 @@ export interface BrandDetails {
   github?: string;
   /** Twitter/X profile URL */
   twitter?: string;
+  /** Discord community or profile URL */
+  discord?: string;
   /** Personal or site website URL */
   website?: string;
   /** Optional tagline (e.g. in footer) */
@@ -35,4 +52,6 @@ export interface BrandTheme {
   fontFamily?: string;
   /** Link default color (defaults from primaryColor if omitted) */
   linkColor?: string;
+  /** Size for social icon buttons (e.g. 2rem, 32px) */
+  socialIconSize?: string;
 }

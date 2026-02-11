@@ -1,3 +1,3 @@
 export { Header } from "./Header";
 export { Footer } from "./Footer";
-export type { BrandDetails, BrandTheme } from "./types";
+export type { BrandDetails, BrandTheme, BrandNavLink } from "./types";
