@@ -1,0 +1,180 @@
+/* Brand Shell — default theme (use CSS variables to override) */
+
+:root {
+  --brand-primary: #2563eb;
+  --brand-bg: #0f172a;
+  --brand-text: #f1f5f9;
+  --brand-font: "Inter", system-ui, -apple-system, sans-serif;
+  --brand-link: #94a3b8;
+  --brand-space-sm: 0.5rem;
+  --brand-space-md: 1rem;
+  --brand-space-lg: 1.5rem;
+  --brand-space-xl: 2rem;
+  --brand-radius: 6px;
+  --brand-header-height: 3.5rem;
+  --brand-footer-padding: 2rem;
+}
+
+/* Header */
+.brand-shell-header {
+  --_bg: var(--brand-bg);
+  --_text: var(--brand-text);
+  --_font: var(--brand-font);
+  --_primary: var(--brand-primary);
+  --_link: var(--brand-link);
+  --_space: var(--brand-space-md);
+
+  font-family: var(--_font);
+  background: var(--_bg);
+  color: var(--_text);
+  min-height: var(--brand-header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--_space);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+}
+
+.brand-shell-header__inner {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--_space);
+}
+
+.brand-shell-header__name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--_text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+.brand-shell-header__name:hover {
+  color: var(--_primary);
+}
+
+.brand-shell-header__name:focus-visible {
+  outline: 2px solid var(--_primary);
+  outline-offset: 2px;
+  border-radius: var(--brand-radius);
+}
+
+.brand-shell-header__nav {
+  display: flex;
+  align-items: center;
+}
+
+.brand-shell-header__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--brand-space-sm) var(--_space);
+}
+
+.brand-shell-header__link {
+  font-size: 0.9375rem;
+  color: var(--_link);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--brand-radius);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.brand-shell-header__link:hover {
+  color: var(--_primary);
+}
+
+.brand-shell-header__link:focus-visible {
+  outline: 2px solid var(--_primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .brand-shell-header__inner {
+    flex-wrap: wrap;
+  }
+  .brand-shell-header__list {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Footer */
+.brand-shell-footer {
+  --_bg: var(--brand-bg);
+  --_text: var(--brand-text);
+  --_font: var(--brand-font);
+  --_primary: var(--brand-primary);
+  --_link: var(--brand-link);
+  --_space: var(--brand-space-md);
+
+  font-family: var(--_font);
+  background: var(--_bg);
+  color: var(--_text);
+  padding: var(--brand-footer-padding) var(--_space);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: auto;
+  box-sizing: border-box;
+}
+
+.brand-shell-footer__inner {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--brand-space-md);
+}
+
+.brand-shell-footer__nav {
+  display: flex;
+  align-items: center;
+}
+
+.brand-shell-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--brand-space-sm) var(--_space);
+}
+
+.brand-shell-footer__link {
+  font-size: 0.9375rem;
+  color: var(--_link);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--brand-radius);
+  transition: color 0.15s ease;
+}
+
+.brand-shell-footer__link:hover {
+  color: var(--_primary);
+}
+
+.brand-shell-footer__link:focus-visible {
+  outline: 2px solid var(--_primary);
+  outline-offset: 2px;
+}
+
+.brand-shell-footer__tagline {
+  font-size: 0.875rem;
+  color: var(--_link);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.brand-shell-footer__copy {
+  font-size: 0.8125rem;
+  color: var(--_link);
+  margin: 0;
+  opacity: 0.9;
+}
