@@ -17,6 +17,16 @@ const sampleDetails: BrandDetails = {
     { label: "Docs", href: "https://brand-shell.dev/docs" },
     { label: "About", href: "https://brand-shell.dev/about" },
   ],
+  primaryAction: {
+    label: "Hire Me",
+    href: "mailto:hello@brand-shell.dev",
+  },
+  secondaryAction: {
+    label: "View Resume",
+    href: "https://brand-shell.dev/resume.pdf",
+    target: "_blank",
+    rel: "noopener noreferrer",
+  },
 };
 
 type HeaderStoryProps = HeaderProps & { socialIconSize?: string };

@@ -14,6 +14,21 @@ export interface BrandNavLink {
   rel?: string;
 }
 
+export interface BrandAction {
+  /** Visible label on the CTA button */
+  label: string;
+  /** URL the CTA points to */
+  href: string;
+  /** Optional aria-label override */
+  ariaLabel?: string;
+  /** Optional target attribute */
+  target?: "_blank" | "_self" | "_parent" | "_top";
+  /** Optional rel attribute */
+  rel?: string;
+  /** Style variant hint */
+  variant?: "primary" | "secondary" | "ghost";
+}
+
 export interface BrandDetails {
   /** Display name (e.g. in header and footer) */
   name: string;
@@ -21,6 +36,10 @@ export interface BrandDetails {
   homeHref?: string;
   /** Primary nav links shown in the header/footer text nav */
   navLinks?: BrandNavLink[];
+  /** Optional highlighted CTA button */
+  primaryAction?: BrandAction;
+  /** Optional secondary CTA button */
+  secondaryAction?: BrandAction;
   /** LinkedIn profile URL */
   linkedin?: string;
   /** Email address (e.g. mailto: or plain) */

@@ -1,4 +1,4 @@
-import type { BrandDetails, BrandTheme } from "./types";
+import type { BrandDetails, BrandTheme, BrandAction } from "./types";
 import { themeToStyle, detailsToSocialLinks } from "./utils";
 import type { SocialPlatform } from "./utils";
 import type { IconProps } from "./icons";
@@ -21,6 +21,9 @@ export function Header({ details, theme, className }: HeaderProps) {
   const style = themeToStyle(theme);
   const navLinks = details.navLinks ?? [];
   const socialLinks = detailsToSocialLinks(details);
+  const ctaLinks = [details.secondaryAction, details.primaryAction].filter(
+    (action): action is BrandAction => Boolean(action),
+  );
   const combinedClassName = ["brand-shell-header", className].filter(Boolean).join(" ");
 
   return (
@@ -52,6 +55,24 @@ export function Header({ details, theme, className }: HeaderProps) {
                 })}
               </ul>
             </nav>
+          )}
+          {ctaLinks.length > 0 && (
+            <div className="brand-shell-header__ctas">
+              {ctaLinks.map((action, index) => (
+                <a
+                  key={action.href + action.label}
+                  href={action.href}
+                  className={["brand-shell-button", getCtaClassName(action, details.primaryAction, index === ctaLinks.length - 1)].join(
+                    " ",
+                  )}
+                  aria-label={action.ariaLabel ?? action.label}
+                  target={action.target ?? "_self"}
+                  rel={action.rel ?? (action.target === "_blank" ? "noopener noreferrer" : undefined)}
+                >
+                  {action.label}
+                </a>
+              ))}
+            </div>
           )}
           {socialLinks.length > 0 && (
             <div className="brand-shell-header__social" aria-label="Social links">
@@ -86,3 +107,8 @@ const SOCIAL_ICON_COMPONENTS: Record<SocialPlatform, (props: IconProps) => JSX.E
   twitter: TwitterIcon,
   discord: DiscordIcon,
 };
+
+function getCtaClassName(action: BrandAction, primaryAction?: BrandAction, isLast?: boolean) {
+  const variant = action.variant ?? (action === primaryAction || isLast ? "primary" : "secondary");
+  return `brand-shell-button--${variant}`;
+}

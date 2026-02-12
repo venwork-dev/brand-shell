@@ -7,5 +7,4 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   external: ["react", "react-dom"],
-  copy: [{ from: "styles/default.css", to: "dist/default.css" }],
 });

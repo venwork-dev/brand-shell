@@ -17,6 +17,14 @@ const sharedDetails: BrandDetails = {
     { label: "Docs", href: "https://brand-shell.dev/docs" },
     { label: "About", href: "https://brand-shell.dev/about" },
   ],
+  primaryAction: {
+    label: "Contact",
+    href: "mailto:hello@brand-shell.dev",
+  },
+  secondaryAction: {
+    label: "Subscribe",
+    href: "https://brand-shell.dev/newsletter",
+  },
 };
 
 type FooterStoryProps = FooterProps & { socialIconSize?: string };
