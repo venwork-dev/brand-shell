@@ -11,6 +11,8 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: "brand-shell/web", replacement: `${distRoot}/web.mjs` },
+      { find: "brand-shell/vue", replacement: `${distRoot}/vue.mjs` },
+      { find: "brand-shell/svelte", replacement: `${distRoot}/svelte.mjs` },
       { find: "brand-shell/default.css", replacement: `${distRoot}/default.css` },
       { find: "brand-shell", replacement: `${distRoot}/index.mjs` },
     ],

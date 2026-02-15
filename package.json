@@ -15,6 +15,14 @@
       "import": "./dist/web.mjs",
       "types": "./dist/web.d.mts"
     },
+    "./vue": {
+      "import": "./dist/vue.mjs",
+      "types": "./dist/vue.d.mts"
+    },
+    "./svelte": {
+      "import": "./dist/svelte.mjs",
+      "types": "./dist/svelte.d.mts"
+    },
     "./default.css": "./dist/default.css",
     "./dist/default.css": "./dist/default.css"
   },
@@ -46,10 +54,18 @@
     "postbuild": "node scripts/copy-css.cjs"
   },
   "peerDependencies": {
-    "react": ">=18.0.0"
+    "react": ">=18.0.0",
+    "svelte": ">=5.0.0",
+    "vue": ">=3.5.0"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
       "optional": true
     }
   },
@@ -58,8 +74,10 @@
     "@types/react": "^18.3.12",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "svelte": "^5.0.0",
     "tsdown": "^0.20.0",
     "typescript": "^5.6.3",
+    "vue": "^3.5.0",
     "storybook": "^10.2.8",
     "@storybook/react-vite": "^10.2.8",
     "@chromatic-com/storybook": "^5.0.1",

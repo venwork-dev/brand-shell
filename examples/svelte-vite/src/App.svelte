@@ -1,37 +1,25 @@
 <script>
-  import { onMount } from "svelte";
-  import { applyBrandShellProps, registerBrandShellElements } from "brand-shell/web";
+  import { brandShell } from "brand-shell/svelte";
   import "brand-shell/default.css";
 
   import contract from "../../shared/brand-contract.json";
 
-  registerBrandShellElements();
-
-  let headerEl;
-  let footerEl;
-
-  onMount(() => {
-    applyBrandShellProps(headerEl, {
-      details: contract.details,
-      theme: contract.theme,
-    });
-    applyBrandShellProps(footerEl, {
-      details: contract.details,
-      theme: contract.theme,
-    });
-  });
+  const shellProps = {
+    details: contract.details,
+    theme: contract.theme,
+  };
 </script>
 
 <div class="app">
-  <brand-header bind:this={headerEl}></brand-header>
+  <brand-header use:brandShell={shellProps}></brand-header>
   <main class="content">
     <h1>Svelte Demo</h1>
     <p>
-      This app uses <code>brand-shell/web</code> and the shared contract from
+      This app uses <code>brand-shell/svelte</code> and the shared contract from
       <code>examples/shared/brand-contract.json</code>.
     </p>
   </main>
-  <brand-footer bind:this={footerEl}></brand-footer>
+  <brand-footer use:brandShell={shellProps}></brand-footer>
 </div>
 
 <style>

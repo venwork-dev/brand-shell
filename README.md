@@ -1,6 +1,6 @@
 ## Brand Shell
 
-Reusable header and footer components that ship with a premium default theme, typed props, and Storybook-based docs. Drop the package into any React app (Vite, Next.js, etc.) to keep your brand chrome consistent across projects.
+Reusable header and footer components that ship with a premium default theme, typed props, and Storybook-based docs. Drop the package into React, Vue, or Svelte apps to keep your brand chrome consistent across projects.
 
 ### Installation
 
@@ -95,6 +95,44 @@ if (header && footer) {
   applyBrandShellProps(header, { details, theme });
   applyBrandShellProps(footer, { details, theme });
 }
+```
+
+### Vue adapter
+
+Use framework-native Vue components:
+
+```vue
+<script setup>
+import { BrandFooter, BrandHeader } from "brand-shell/vue";
+import "brand-shell/default.css";
+
+const details = { name: "Brand Shell" };
+const theme = { primaryColor: "#0ea5e9" };
+</script>
+
+<template>
+  <BrandHeader :details="details" :theme="theme" />
+  <BrandFooter :details="details" :theme="theme" />
+</template>
+```
+
+### Svelte adapter
+
+Use a Svelte action on the custom element tags:
+
+```svelte
+<script>
+  import { brandShell } from "brand-shell/svelte";
+  import "brand-shell/default.css";
+
+  const shellProps = {
+    details: { name: "Brand Shell" },
+    theme: { primaryColor: "#0ea5e9" },
+  };
+</script>
+
+<brand-header use:brandShell={shellProps}></brand-header>
+<brand-footer use:brandShell={shellProps}></brand-footer>
 ```
 
 ### Props reference

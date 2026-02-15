@@ -24,7 +24,7 @@ export default defineConfig({
       {
         test: {
           name: "web-smoke",
-          include: ["src/web/**/*.test.ts"],
+          include: ["src/web/**/*.test.ts", "src/vue/**/*.test.ts", "src/svelte/**/*.test.ts"],
           browser: {
             enabled: true,
             headless: true,

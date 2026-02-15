@@ -52,6 +52,6 @@ bun run dev
 
 ## Demos
 
-- `examples/react-vite`
-- `examples/vue-vite`
-- `examples/svelte-vite`
+- `examples/react-vite` uses `brand-shell` (React components)
+- `examples/vue-vite` uses `brand-shell/vue` (Vue adapter)
+- `examples/svelte-vite` uses `brand-shell/svelte` (Svelte action adapter)
