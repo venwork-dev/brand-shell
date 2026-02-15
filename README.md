@@ -88,6 +88,8 @@ import schema from "brand-shell/schema";
 
 This repo validates the schema with Ajv in unit tests (`src/core/schema.test.ts`) to catch contract regressions before release.
 
+Package publish surface is also guarded by `bun run pack:check` (allowed files + unpacked size budget) so docs/dev-webapp files cannot bloat the npm package.
+
 ### Web Components adapter
 
 You can also use framework-agnostic custom elements:
@@ -269,3 +271,13 @@ bun run test:smoke
 ```
 
 See `examples/README.md` for details.
+
+### Dev Webapp Docs
+
+An interactive docs/playground app lives in `apps/docs` and is intentionally excluded from npm package publish size.
+
+```bash
+bun run docs:setup
+bun run docs:dev
+bun run docs:build
+```
