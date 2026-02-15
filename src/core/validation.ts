@@ -1,4 +1,5 @@
-import { normalizeBrandDetails, type NormalizedBrandDetails } from "./shell";
+import { normalizeBrandDetails, normalizeGmailHref, type NormalizedBrandDetails } from "./shell";
+import { normalizeSafeHref } from "./links";
 import type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "./types";
 
 const LINK_TARGETS = new Set<NonNullable<BrandNavLink["target"]>>(["_blank", "_self", "_parent", "_top"]);
@@ -43,12 +44,19 @@ export function validateBrandDetails(details: unknown): BrandValidationResult<No
 
   validateRequiredString(details.name, "details.name", errors);
   validateOptionalString(details.homeHref, "details.homeHref", errors);
+  validateSafeHref(details.homeHref, "details.homeHref", errors);
   validateOptionalString(details.website, "details.website", errors);
+  validateSafeHref(details.website, "details.website", errors);
   validateOptionalString(details.linkedin, "details.linkedin", errors);
+  validateSafeHref(details.linkedin, "details.linkedin", errors);
   validateOptionalString(details.gmail, "details.gmail", errors);
+  validateGmail(details.gmail, "details.gmail", errors);
   validateOptionalString(details.github, "details.github", errors);
+  validateSafeHref(details.github, "details.github", errors);
   validateOptionalString(details.twitter, "details.twitter", errors);
+  validateSafeHref(details.twitter, "details.twitter", errors);
   validateOptionalString(details.discord, "details.discord", errors);
+  validateSafeHref(details.discord, "details.discord", errors);
   validateOptionalString(details.tagline, "details.tagline", errors);
 
   if (details.navLinks != null) {
@@ -154,6 +162,7 @@ function validateNavLink(link: unknown, path: ValidationErrorPath, errors: strin
 
   validateRequiredString(link.label, `${path}.label`, errors);
   validateRequiredString(link.href, `${path}.href`, errors);
+  validateSafeHref(link.href, `${path}.href`, errors);
   validateOptionalString(link.ariaLabel, `${path}.ariaLabel`, errors);
   validateOptionalString(link.rel, `${path}.rel`, errors);
   validateTarget(link.target, `${path}.target`, errors);
@@ -167,6 +176,7 @@ function validateAction(action: unknown, path: ValidationErrorPath, errors: stri
 
   validateRequiredString(action.label, `${path}.label`, errors);
   validateRequiredString(action.href, `${path}.href`, errors);
+  validateSafeHref(action.href, `${path}.href`, errors);
   validateOptionalString(action.ariaLabel, `${path}.ariaLabel`, errors);
   validateOptionalString(action.rel, `${path}.rel`, errors);
   validateTarget(action.target, `${path}.target`, errors);
@@ -195,6 +205,22 @@ function validateOptionalString(value: unknown, path: ValidationErrorPath, error
   if (value == null) return;
   if (typeof value !== "string" || value.trim().length === 0) {
     errors.push(`${path} must be a non-empty string when provided.`);
+  }
+}
+
+function validateSafeHref(value: unknown, path: ValidationErrorPath, errors: string[]) {
+  if (value == null) return;
+  if (typeof value !== "string" || value.trim().length === 0) return;
+  if (!normalizeSafeHref(value)) {
+    errors.push(`${path} must use a safe URL/path (http, https, mailto, tel, or relative path).`);
+  }
+}
+
+function validateGmail(value: unknown, path: ValidationErrorPath, errors: string[]) {
+  if (value == null) return;
+  if (typeof value !== "string" || value.trim().length === 0) return;
+  if (!normalizeGmailHref(value)) {
+    errors.push(`${path} must be a valid email or mailto URL.`);
   }
 }
 

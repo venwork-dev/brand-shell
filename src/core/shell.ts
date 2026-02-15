@@ -1,5 +1,6 @@
 import { detailsToSocialLinks, type SocialLink } from "./social";
 import type { BrandAction, BrandDetails, BrandNavLink } from "./types";
+import { normalizeRel, normalizeSafeHref } from "./links";
 
 export type LinkTarget = NonNullable<BrandNavLink["target"]>;
 
@@ -31,10 +32,14 @@ export interface NormalizedBrandDetails extends Omit<BrandDetails, "navLinks" | 
 }
 
 export function normalizeNavLinks(navLinks: BrandNavLink[] = []): ShellNavLink[] {
-  return navLinks.map((link) => {
+  return navLinks.flatMap((link) => {
+    const href = normalizeSafeHref(link.href);
+    if (!href) return [];
+
     const { target, rel } = normalizeLinkTargetRel(link.target, link.rel);
     return {
       ...link,
+      href,
       ariaLabel: link.ariaLabel ?? link.label,
       target,
       rel,
@@ -48,7 +53,13 @@ export function normalizeBrandDetails(details: BrandDetails): NormalizedBrandDet
 
   return {
     ...details,
+    homeHref: normalizeSafeHref(details.homeHref),
     gmail: normalizeGmailHref(details.gmail),
+    website: normalizeSafeHref(details.website),
+    linkedin: normalizeSafeHref(details.linkedin),
+    github: normalizeSafeHref(details.github),
+    twitter: normalizeSafeHref(details.twitter),
+    discord: normalizeSafeHref(details.discord),
     navLinks: normalizeNavLinks(details.navLinks),
     primaryAction: normalizedPrimaryAction,
     secondaryAction: normalizedSecondaryAction,
@@ -90,24 +101,33 @@ export function normalizeGmailHref(gmail?: string): string | undefined {
   if (typeof gmail !== "string") return undefined;
   const trimmed = gmail.trim();
   if (trimmed.length === 0) return undefined;
-  return trimmed.startsWith("mailto:") ? trimmed : `mailto:${trimmed}`;
+  if (trimmed.toLowerCase().startsWith("mailto:")) {
+    const address = trimmed.slice(7).trim();
+    if (address.length === 0) return undefined;
+    return normalizeSafeHref(`mailto:${address}`);
+  }
+  return normalizeSafeHref(`mailto:${trimmed}`);
 }
 
 function normalizeAction(action?: BrandAction): NormalizedActionLink | undefined {
   if (!action) return undefined;
 
+  const href = normalizeSafeHref(action.href);
+  if (!href) return undefined;
+
   const { target, rel } = normalizeLinkTargetRel(action.target, action.rel);
   return {
     ...action,
+    href,
     target,
     rel,
     ariaLabel: action.ariaLabel ?? action.label,
   };
 }
 
-function normalizeLinkTargetRel(target?: BrandNavLink["target"], rel?: string) {
+export function normalizeLinkTargetRel(target?: BrandNavLink["target"], rel?: string) {
   const normalizedTarget: LinkTarget = target ?? "_self";
-  const normalizedRel = rel ?? (normalizedTarget === "_blank" ? "noopener noreferrer" : undefined);
+  const normalizedRel = normalizeRel(normalizedTarget, rel);
   return {
     target: normalizedTarget,
     rel: normalizedRel,

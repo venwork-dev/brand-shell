@@ -45,6 +45,36 @@ describe("validateBrandDetails", () => {
     expect(result.errors).toContain("details.navLinks[0].href must be a non-empty string.");
     expect(result.errors).toContain("details.primaryAction.target must be one of: _blank, _self, _parent, _top.");
   });
+
+  it("rejects unsafe href protocols", () => {
+    const result = validateBrandDetails({
+      name: "Brand Shell",
+      navLinks: [{ label: "Docs", href: "javascript:alert(1)" }],
+      primaryAction: { label: "Contact", href: "data:text/html,<h1>xss</h1>" },
+      website: "vbscript:msgbox(1)",
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      "details.navLinks[0].href must use a safe URL/path (http, https, mailto, tel, or relative path).",
+    );
+    expect(result.errors).toContain(
+      "details.primaryAction.href must use a safe URL/path (http, https, mailto, tel, or relative path).",
+    );
+    expect(result.errors).toContain(
+      "details.website must use a safe URL/path (http, https, mailto, tel, or relative path).",
+    );
+  });
+
+  it("rejects invalid gmail payloads", () => {
+    const result = validateBrandDetails({
+      name: "Brand Shell",
+      gmail: "mailto:",
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("details.gmail must be a valid email or mailto URL.");
+  });
 });
 
 describe("validateBrandTheme", () => {

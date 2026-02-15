@@ -32,6 +32,23 @@ describe("normalizeNavLinks", () => {
       },
     ]);
   });
+
+  it("drops unsafe links", () => {
+    const links = normalizeNavLinks([
+      { label: "Unsafe", href: "javascript:alert(1)" },
+      { label: "Docs", href: "/docs" },
+    ]);
+
+    expect(links).toEqual([
+      {
+        label: "Docs",
+        href: "/docs",
+        ariaLabel: "Docs",
+        target: "_self",
+        rel: undefined,
+      },
+    ]);
+  });
 });
 
 describe("normalizeCtaLinks", () => {
@@ -71,6 +88,20 @@ describe("normalizeCtaLinks", () => {
       },
     ]);
   });
+
+  it("enforces noopener/noreferrer for _blank links even when custom rel is provided", () => {
+    const ctas = normalizeCtaLinks({
+      label: "Launch",
+      href: "https://example.com",
+      target: "_blank",
+      rel: "author noreferrer",
+    });
+
+    expect(ctas[0]).toMatchObject({
+      target: "_blank",
+      rel: "author noreferrer noopener",
+    });
+  });
 });
 
 describe("buildShellViewModel", () => {
@@ -109,6 +140,25 @@ describe("normalizeBrandDetails", () => {
       target: "_blank",
       rel: "noopener noreferrer",
     });
+  });
+
+  it("strips unsafe href fields from details", () => {
+    const details = normalizeBrandDetails({
+      name: "Brand Shell",
+      homeHref: "javascript:alert(1)",
+      website: "vbscript:msgbox(1)",
+      navLinks: [
+        { label: "Unsafe", href: "javascript:alert(1)" },
+        { label: "Docs", href: "/docs" },
+      ],
+      primaryAction: { label: "Unsafe CTA", href: "data:text/plain,hello" },
+    });
+
+    expect(details.homeHref).toBeUndefined();
+    expect(details.website).toBeUndefined();
+    expect(details.navLinks).toHaveLength(1);
+    expect(details.navLinks[0]?.href).toBe("/docs");
+    expect(details.primaryAction).toBeUndefined();
   });
 });
 

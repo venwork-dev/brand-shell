@@ -118,6 +118,25 @@ const HOW_IT_WORKS = [
   },
 ];
 
+const SECURITY_GUARDS = [
+  {
+    title: "Safe Link Protocols",
+    description: "Core normalization allows only http/https/mailto/tel or relative paths and strips unsafe URLs.",
+  },
+  {
+    title: "Blank-Target Hardening",
+    description: "Links that open in new tabs always include noopener/noreferrer for safer cross-window behavior.",
+  },
+  {
+    title: "No HTML Injection Path",
+    description: "Adapters render user values as text/attributes, not raw HTML, reducing XSS risk by design.",
+  },
+  {
+    title: "Schema + Runtime Validation",
+    description: "JSON Schema and core validators provide explicit, test-backed contract checks before rendering.",
+  },
+];
+
 const fallbackDetails = validateBrandDetails(DEFAULT_DETAILS).normalized ?? DEFAULT_DETAILS;
 const fallbackTheme = validateBrandTheme(DEFAULT_THEME).normalized ?? DEFAULT_THEME;
 
@@ -261,6 +280,18 @@ export default function App() {
           <pre className="code-block">
             <code>{FRAMEWORK_SNIPPETS[activeFramework]}</code>
           </pre>
+        </section>
+
+        <section className="panel panel--security">
+          <h2>Security by default</h2>
+          <div className="security-grid">
+            {SECURITY_GUARDS.map((item) => (
+              <article key={item.title} className="security-card">
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="panel panel--playground">
