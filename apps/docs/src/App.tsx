@@ -13,7 +13,7 @@ import {
 import schema from "brand-shell/schema";
 import "brand-shell/default.css";
 
-type Framework = "react" | "vue" | "svelte" | "web";
+type Framework = "react" | "next" | "tanstack" | "vue" | "svelte" | "web";
 
 const DEFAULT_DETAILS: BrandDetails = {
   name: "Brand Shell",
@@ -44,6 +44,15 @@ const DEFAULT_THEME: BrandTheme = {
 
 const DEFAULT_DETAILS_TEXT = JSON.stringify(DEFAULT_DETAILS, null, 2);
 const DEFAULT_THEME_TEXT = JSON.stringify(DEFAULT_THEME, null, 2);
+const FRAMEWORK_ORDER: Framework[] = ["react", "next", "tanstack", "vue", "svelte", "web"];
+const FRAMEWORK_LABELS: Record<Framework, string> = {
+  react: "React",
+  next: "Next.js",
+  tanstack: "TanStack",
+  vue: "Vue",
+  svelte: "Svelte",
+  web: "Web",
+};
 
 const FRAMEWORK_SNIPPETS: Record<Framework, string> = {
   react: `import { Header, Footer } from "brand-shell";
@@ -51,6 +60,31 @@ import "brand-shell/default.css";
 
 <Header details={details} theme={theme} />
 <Footer details={details} theme={theme} />`,
+  next: `import { Header, Footer } from "brand-shell";
+import "brand-shell/default.css";
+
+// app/page.tsx (Next App Router)
+export default function Page() {
+  return (
+    <>
+      <Header details={details} theme={theme} />
+      <Footer details={details} theme={theme} />
+    </>
+  );
+}`,
+  tanstack: `import { createRootRoute, createRoute, createRouter, RouterProvider } from "@tanstack/react-router";
+import { Header, Footer } from "brand-shell";
+import "brand-shell/default.css";
+
+// Route component
+function Home() {
+  return (
+    <>
+      <Header details={details} theme={theme} />
+      <Footer details={details} theme={theme} />
+    </>
+  );
+}`,
   vue: `import { BrandHeader, BrandFooter } from "brand-shell/vue";
 import "brand-shell/default.css";
 
@@ -80,7 +114,7 @@ const HOW_IT_WORKS = [
   },
   {
     title: "Framework Adapters",
-    description: "React, Vue, Svelte, and Web adapters render from the same normalized model.",
+    description: "React, Next.js, TanStack Router, Vue, Svelte, and Web adapters render from the same normalized model.",
   },
 ];
 
@@ -191,7 +225,8 @@ export default function App() {
         <div className="hero__badge">Brand Shell Dev Webapp</div>
         <h1>Build once. Reuse everywhere.</h1>
         <p>
-          Brand Shell gives you a shared, validated header/footer contract across React, Vue, Svelte, and Web Components.
+          Brand Shell gives you a shared, validated header/footer contract across React, Next.js, TanStack Router, Vue,
+          Svelte, and Web Components.
           Test payloads here before integrating with customer apps.
         </p>
       </header>
@@ -212,14 +247,14 @@ export default function App() {
         <section className="panel">
           <h2>Framework quickstart</h2>
           <div className="framework-tabs">
-            {(Object.keys(FRAMEWORK_SNIPPETS) as Framework[]).map((framework) => (
+            {FRAMEWORK_ORDER.map((framework) => (
               <button
                 key={framework}
                 className={framework === activeFramework ? "tab tab--active" : "tab"}
                 onClick={() => setActiveFramework(framework)}
                 type="button"
               >
-                {framework}
+                {FRAMEWORK_LABELS[framework]}
               </button>
             ))}
           </div>
