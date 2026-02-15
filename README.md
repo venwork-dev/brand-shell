@@ -57,6 +57,48 @@ The package now exports pure TypeScript helpers you can reuse in other framework
 import { detailsToSocialLinks, themeToCssVariables } from "brand-shell";
 ```
 
+### Web Components adapter
+
+You can also use framework-agnostic custom elements:
+
+```ts
+import { registerBrandShellElements } from "brand-shell/web";
+import "brand-shell/dist/default.css";
+
+registerBrandShellElements();
+```
+
+```html
+<brand-header id="app-header"></brand-header>
+<brand-footer id="app-footer"></brand-footer>
+```
+
+```ts
+const details = {
+  name: "Brand Shell",
+  homeHref: "/",
+  navLinks: [{ label: "Docs", href: "/docs" }],
+  primaryAction: { label: "Contact", href: "mailto:hello@example.com" },
+  linkedin: "https://linkedin.com/in/example",
+};
+
+const theme = {
+  primaryColor: "#0ea5e9",
+  backgroundColor: "#0f172a",
+  textColor: "#f8fafc",
+};
+
+const header = document.getElementById("app-header");
+const footer = document.getElementById("app-footer");
+
+if (header && footer) {
+  header.setAttribute("details", JSON.stringify(details));
+  header.setAttribute("theme", JSON.stringify(theme));
+  footer.setAttribute("details", JSON.stringify(details));
+  footer.setAttribute("theme", JSON.stringify(theme));
+}
+```
+
 ### Props reference
 
 #### `BrandDetails`

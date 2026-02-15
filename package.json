@@ -11,6 +11,10 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.mts"
     },
+    "./web": {
+      "import": "./dist/web.mjs",
+      "types": "./dist/web.d.mts"
+    },
     "./dist/default.css": "./dist/default.css"
   },
   "files": [
@@ -29,6 +33,11 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

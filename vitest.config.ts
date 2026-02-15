@@ -22,6 +22,18 @@ export default defineConfig({
         },
       },
       {
+        test: {
+          name: "web-smoke",
+          include: ["src/web/**/*.test.ts"],
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [{ browser: "chromium" }],
+          },
+        },
+      },
+      {
         extends: true,
         plugins: [
           // The plugin will run tests for the stories defined in your Storybook config
