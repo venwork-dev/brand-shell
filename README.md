@@ -5,10 +5,6 @@ Reusable header and footer components that ship with a premium default theme, ty
 ### Installation
 
 ```bash
-npm install brand-shell
-# or
-pnpm add brand-shell
-# or
 bun add brand-shell
 ```
 
@@ -99,6 +95,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 | `fontFamily` | `string` | Font stack |
 | `linkColor` | `string` | Optional base link color |
 | `socialIconSize` | `string` | Size of the circular social buttons (defaults to `2.5rem`) |
+| `buttonTextColor` | `string` | Optional primary CTA text color override |
 
 ### Theming via CSS variables
 
@@ -112,7 +109,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 | `--brand-font` | `"Inter", system-ui` | Font stack |
 | `--brand-link` | `#94a3b8` | Link color |
 | `--brand-social-size` | `2.5rem` | Icon button size |
-| `--brand-button-text` | `#0f172a` | Primary button text color |
+| `--brand-button-text` | `#f8fafc` | Primary button text color |
 
 Set them once in your consuming app:
 
@@ -129,7 +126,7 @@ Set them once in your consuming app:
 Run Storybook locally to explore examples and tweak controls:
 
 ```bash
-npm run storybook
+bun run storybook
 ```
 
 The stories showcase default, themed, and minimal configurations and expose controls for nav links, CTA buttons, and theme tokens.

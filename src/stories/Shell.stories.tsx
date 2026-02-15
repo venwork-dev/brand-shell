@@ -57,7 +57,7 @@ export const FullLayout: Story = {
         <h1 style={{ margin: "0 0 1rem 0", fontSize: "1.75rem" }}>
           Page content
         </h1>
-        <p style={{ margin: 0, color: "var(--brand-link, #94a3b8)" }}>
+        <p style={{ margin: 0, color: "#334155" }}>
           This story shows Header + main + Footer together—the typical layout for
           a site using brand-shell.
         </p>
@@ -76,7 +76,7 @@ export const LightTheme: Story = {
           primaryColor: "#0ea5e9",
           backgroundColor: "#f8fafc",
           textColor: "#0f172a",
-          linkColor: "#64748b",
+          linkColor: "#334155",
           fontFamily: '"Inter", system-ui, sans-serif',
           socialIconSize: "2rem",
         }}
@@ -105,7 +105,7 @@ export const LightTheme: Story = {
           primaryColor: "#0ea5e9",
           backgroundColor: "#f8fafc",
           textColor: "#0f172a",
-          linkColor: "#64748b",
+          linkColor: "#334155",
           socialIconSize: "2rem",
         }}
       />

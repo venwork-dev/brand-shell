@@ -25,13 +25,18 @@ export function Header({ details, theme, className }: HeaderProps) {
     (action): action is BrandAction => Boolean(action),
   );
   const combinedClassName = ["brand-shell-header", className].filter(Boolean).join(" ");
+  const brandIdentity = details.homeHref ? (
+    <a href={details.homeHref} className="brand-shell-header__name" aria-label={`${details.name} home`}>
+      {details.name}
+    </a>
+  ) : (
+    <span className="brand-shell-header__name">{details.name}</span>
+  );
 
   return (
     <header className={combinedClassName} style={style} role="banner">
       <div className="brand-shell-header__inner">
-        <a href={details.homeHref ?? "#"} className="brand-shell-header__name" aria-label={`${details.name} home`}>
-          {details.name}
-        </a>
+        {brandIdentity}
         <div className="brand-shell-header__actions">
           {navLinks.length > 0 && (
             <nav className="brand-shell-header__nav" aria-label="Primary">

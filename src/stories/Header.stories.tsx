@@ -69,7 +69,7 @@ export const CustomTheme: Story = {
       primaryColor: "#0ea5e9",
       backgroundColor: "#f8fafc",
       textColor: "#0f172a",
-      linkColor: "#0891b2",
+      linkColor: "#0f766e",
       fontFamily: '"Playfair Display", serif',
     },
     socialIconSize: "2rem",

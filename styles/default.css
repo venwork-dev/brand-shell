@@ -14,7 +14,7 @@
   --brand-header-height: 3.5rem;
   --brand-footer-padding: 2rem;
   --brand-social-size: 2.5rem;
-  --brand-button-text: #0f172a;
+  --brand-button-text: #f8fafc;
   --brand-button-secondary: rgba(255, 255, 255, 0.12);
 }
 
@@ -102,10 +102,12 @@
 .brand-shell-header__social-link {
   width: var(--brand-social-size);
   height: var(--brand-social-size);
+  font-size: calc(var(--brand-social-size) * 0.5);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
   color: var(--_text);
   background: rgba(255, 255, 255, 0.08);
   transition: background 0.15s ease, color 0.15s ease;
@@ -231,10 +233,12 @@
 .brand-shell-footer__social-link {
   width: var(--brand-social-size);
   height: var(--brand-social-size);
+  font-size: calc(var(--brand-social-size) * 0.5);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
   color: var(--_text);
   background: rgba(255, 255, 255, 0.08);
   transition: background 0.15s ease, color 0.15s ease;

@@ -19,6 +19,10 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.check.json --noEmit",
+    "lint": "bun run typecheck",
+    "check": "bun run lint && bun run test && bun run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "postbuild": "node scripts/copy-css.cjs"

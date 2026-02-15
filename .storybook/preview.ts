@@ -12,8 +12,8 @@ const preview: Preview = {
       },
     },
     a11y: {
-      // keep violations visible in the addon panel, but don't fail CI yet
-      test: "todo",
+      // fail tests when accessibility violations are detected
+      test: "error",
     },
   },
 };

@@ -73,4 +73,6 @@ export interface BrandTheme {
   linkColor?: string;
   /** Size for social icon buttons (e.g. 2rem, 32px) */
   socialIconSize?: string;
+  /** Optional override for primary CTA text color */
+  buttonTextColor?: string;
 }
