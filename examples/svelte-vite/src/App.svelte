@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { registerBrandShellElements } from "brand-shell/web";
+  import { applyBrandShellProps, registerBrandShellElements } from "brand-shell/web";
   import "brand-shell/default.css";
 
   import contract from "../../shared/brand-contract.json";
@@ -11,13 +11,14 @@
   let footerEl;
 
   onMount(() => {
-    const details = JSON.stringify(contract.details);
-    const theme = JSON.stringify(contract.theme);
-
-    headerEl?.setAttribute("details", details);
-    headerEl?.setAttribute("theme", theme);
-    footerEl?.setAttribute("details", details);
-    footerEl?.setAttribute("theme", theme);
+    applyBrandShellProps(headerEl, {
+      details: contract.details,
+      theme: contract.theme,
+    });
+    applyBrandShellProps(footerEl, {
+      details: contract.details,
+      theme: contract.theme,
+    });
   });
 </script>
 

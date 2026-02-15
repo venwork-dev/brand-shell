@@ -13,6 +13,24 @@ export interface RegisterBrandShellElementsOptions {
   footerTagName?: string;
 }
 
+export interface BrandShellElementProps {
+  details: BrandDetails;
+  theme?: BrandTheme | null;
+  shellClass?: string | null;
+}
+
+export type BrandShellElementLike = HTMLElement & {
+  details?: BrandDetails | null;
+  theme?: BrandTheme | null;
+  shellClass?: string | null;
+};
+
+export interface SerializedBrandShellAttributes {
+  details: string;
+  theme?: string;
+  "shell-class"?: string;
+}
+
 interface ParsedAttributes {
   details: BrandDetails | null;
   theme: BrandTheme | null;
@@ -133,6 +151,33 @@ export function registerBrandShellElements(options: RegisterBrandShellElementsOp
   }
 
   return { headerTagName, footerTagName };
+}
+
+export function applyBrandShellProps(
+  element: BrandShellElementLike | null | undefined,
+  props: BrandShellElementProps,
+) {
+  if (!element) return;
+  element.details = props.details;
+  element.theme = props.theme ?? null;
+  element.shellClass = props.shellClass ?? null;
+}
+
+export function serializeBrandShellAttributes(props: BrandShellElementProps): SerializedBrandShellAttributes {
+  const attributes: SerializedBrandShellAttributes = {
+    details: JSON.stringify(props.details),
+  };
+
+  if (props.theme) {
+    attributes.theme = JSON.stringify(props.theme);
+  }
+
+  const shellClass = normalizeClassName(props.shellClass ?? null);
+  if (shellClass) {
+    attributes["shell-class"] = shellClass;
+  }
+
+  return attributes;
 }
 
 function parseAttributes(element: Element): ParsedAttributes {

@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { registerBrandShellElements } from "brand-shell/web";
+import { applyBrandShellProps, registerBrandShellElements } from "brand-shell/web";
 import "brand-shell/default.css";
 
 import contract from "../../shared/brand-contract.json";
@@ -11,13 +11,14 @@ const headerEl = ref(null);
 const footerEl = ref(null);
 
 onMounted(() => {
-  const details = JSON.stringify(contract.details);
-  const theme = JSON.stringify(contract.theme);
-
-  headerEl.value?.setAttribute("details", details);
-  headerEl.value?.setAttribute("theme", theme);
-  footerEl.value?.setAttribute("details", details);
-  footerEl.value?.setAttribute("theme", theme);
+  applyBrandShellProps(headerEl.value, {
+    details: contract.details,
+    theme: contract.theme,
+  });
+  applyBrandShellProps(footerEl.value, {
+    details: contract.details,
+    theme: contract.theme,
+  });
 });
 </script>
 

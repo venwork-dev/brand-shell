@@ -62,7 +62,7 @@ import { detailsToSocialLinks, themeToCssVariables } from "brand-shell";
 You can also use framework-agnostic custom elements:
 
 ```ts
-import { registerBrandShellElements } from "brand-shell/web";
+import { applyBrandShellProps, registerBrandShellElements } from "brand-shell/web";
 import "brand-shell/default.css";
 
 registerBrandShellElements();
@@ -92,10 +92,8 @@ const header = document.getElementById("app-header");
 const footer = document.getElementById("app-footer");
 
 if (header && footer) {
-  header.setAttribute("details", JSON.stringify(details));
-  header.setAttribute("theme", JSON.stringify(theme));
-  footer.setAttribute("details", JSON.stringify(details));
-  footer.setAttribute("theme", JSON.stringify(theme));
+  applyBrandShellProps(header, { details, theme });
+  applyBrandShellProps(footer, { details, theme });
 }
 ```
 

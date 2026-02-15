@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { registerBrandShellElements } from "./index";
+import { applyBrandShellProps, registerBrandShellElements, serializeBrandShellAttributes } from "./index";
 
 describe("web adapter smoke", () => {
   beforeEach(() => {
@@ -75,6 +75,41 @@ describe("web adapter smoke", () => {
     expect(root?.querySelector(".brand-shell-footer__name")?.textContent).toBe("Brand Shell");
     expect(root?.querySelector(".brand-shell-footer__tagline")?.textContent).toBe("Reusable shell");
     expect(root?.querySelector(".brand-shell-button--primary")?.getAttribute("href")).toBe("mailto:hello@example.com");
+  });
+
+  it("applies typed props helper without manual JSON wiring", () => {
+    registerBrandShellElements();
+
+    const header = document.createElement("brand-header");
+    applyBrandShellProps(header, {
+      details: {
+        name: "Typed Brand",
+        navLinks: [{ label: "Docs", href: "/docs" }],
+      },
+      theme: {
+        primaryColor: "#22c55e",
+      },
+      shellClass: "typed-integration",
+    });
+    document.body.append(header);
+
+    const root = header.querySelector<HTMLElement>("header.brand-shell-header.typed-integration");
+    expect(root).not.toBeNull();
+    expect(root?.style.getPropertyValue("--brand-primary")).toBe("#22c55e");
+    expect(root?.querySelector(".brand-shell-header__name")?.textContent).toBe("Typed Brand");
+    expect(root?.querySelector(".brand-shell-header__link")?.getAttribute("href")).toBe("/docs");
+  });
+
+  it("serializes props to web component attributes", () => {
+    const attrs = serializeBrandShellAttributes({
+      details: { name: "Serialize Brand" },
+      theme: { primaryColor: "#e11d48" },
+      shellClass: "  shell-attrs  ",
+    });
+
+    expect(attrs.details).toContain("\"name\":\"Serialize Brand\"");
+    expect(attrs.theme).toContain("\"primaryColor\":\"#e11d48\"");
+    expect(attrs["shell-class"]).toBe("shell-attrs");
   });
 
   it("supports custom tag names", () => {
