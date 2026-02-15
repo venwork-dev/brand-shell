@@ -2,10 +2,20 @@ import { buildShellViewModel, themeToCssVariables } from "../core";
 import type {
   BrandDetails,
   BrandTheme,
+  NormalizedBrandDetails,
   ShellActionLink,
   ShellNavLink,
   SocialLink,
   SocialPlatform,
+} from "../core";
+import {
+  BrandShellValidationError,
+  assertValidBrandDetails,
+  assertValidBrandTheme,
+  normalizeBrandTheme,
+  shouldValidateInDev,
+  validateBrandDetails,
+  validateBrandTheme,
 } from "../core";
 
 export type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "../core";
@@ -108,12 +118,29 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
   protected abstract build(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement;
 
   private render() {
-    if (!isValidDetails(this._details)) {
+    if (this._details == null) {
       this.replaceChildren();
       return;
     }
 
-    const element = this.build(this._details, this._theme, this._shellClass);
+    const detailsResult = validateBrandDetails(this._details);
+    if (!detailsResult.valid) {
+      if (shouldValidateInDev()) {
+        throw new BrandShellValidationError("brand-shell/web details", detailsResult.errors);
+      }
+      this.replaceChildren();
+      return;
+    }
+
+    const themeResult = validateBrandTheme(this._theme);
+    if (!themeResult.valid && shouldValidateInDev()) {
+      throw new BrandShellValidationError("brand-shell/web theme", themeResult.errors);
+    }
+
+    const normalizedDetails = detailsResult.normalized as NormalizedBrandDetails;
+    const normalizedTheme = themeResult.normalized ?? null;
+
+    const element = this.build(normalizedDetails, normalizedTheme, this._shellClass);
     this.replaceChildren(element);
   }
 
@@ -165,18 +192,30 @@ export function applyBrandShellProps(
   props: BrandShellElementProps,
 ) {
   if (!element) return;
-  element.details = props.details;
-  element.theme = props.theme ?? null;
+  if (shouldValidateInDev()) {
+    assertValidBrandDetails(props.details, "brand-shell/web details");
+    assertValidBrandTheme(props.theme, "brand-shell/web theme");
+  }
+  element.details = validateBrandDetails(props.details).normalized ?? props.details;
+  element.theme = normalizeBrandTheme(props.theme ?? null);
   element.shellClass = props.shellClass ?? null;
 }
 
 export function serializeBrandShellAttributes(props: BrandShellElementProps): SerializedBrandShellAttributes {
+  if (shouldValidateInDev()) {
+    assertValidBrandDetails(props.details, "brand-shell/web serialize details");
+    assertValidBrandTheme(props.theme, "brand-shell/web serialize theme");
+  }
+
+  const normalizedDetails = validateBrandDetails(props.details).normalized ?? props.details;
+  const normalizedTheme = normalizeBrandTheme(props.theme ?? null);
+
   const attributes: SerializedBrandShellAttributes = {
-    details: JSON.stringify(props.details),
+    details: JSON.stringify(normalizedDetails),
   };
 
-  if (props.theme) {
-    attributes.theme = JSON.stringify(props.theme);
+  if (normalizedTheme) {
+    attributes.theme = JSON.stringify(normalizedTheme);
   }
 
   const shellClass = normalizeClassName(props.shellClass ?? null);
@@ -208,10 +247,6 @@ function normalizeClassName(value: string | null): string | null {
   if (!value) return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-}
-
-function isValidDetails(details: BrandDetails | null): details is BrandDetails {
-  return Boolean(details && typeof details.name === "string" && details.name.trim().length > 0);
 }
 
 function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement {

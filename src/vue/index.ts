@@ -1,6 +1,7 @@
 import { defineComponent, h, onMounted, ref, watch, type PropType } from "vue";
 
 import type { BrandDetails, BrandTheme } from "../core";
+import { assertValidBrandDetails, assertValidBrandTheme, shouldValidateInDev } from "../core";
 import { applyBrandShellProps, registerBrandShellElements, type BrandShellElementLike } from "../web";
 
 export type { BrandDetails, BrandTheme } from "../core";
@@ -43,6 +44,11 @@ function createBrandShellVueComponent(
       const elementRef = ref<BrandShellElementLike | null>(null);
 
       const syncProps = () => {
+        if (shouldValidateInDev()) {
+          assertValidBrandDetails(props.details, `brand-shell/vue ${componentName} details`);
+          assertValidBrandTheme(props.theme, `brand-shell/vue ${componentName} theme`);
+        }
+
         applyBrandShellProps(elementRef.value, {
           details: props.details,
           theme: props.theme ?? null,

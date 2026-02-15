@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { buildShellViewModel, normalizeCtaLinks, normalizeNavLinks } from "./shell";
+import {
+  buildShellViewModel,
+  normalizeBrandDetails,
+  normalizeCtaLinks,
+  normalizeGmailHref,
+  normalizeNavLinks,
+} from "./shell";
 
 describe("normalizeNavLinks", () => {
   it("fills default target/aria label and infers rel for external links", () => {
@@ -83,5 +89,32 @@ describe("buildShellViewModel", () => {
       href: "mailto:hello@example.com",
       label: "Email",
     });
+  });
+});
+
+describe("normalizeBrandDetails", () => {
+  it("applies default arrays + target/rel normalization + mailto normalization", () => {
+    const details = normalizeBrandDetails({
+      name: "Brand Shell",
+      gmail: "hello@example.com",
+      primaryAction: { label: "Contact", href: "mailto:hello@example.com", target: "_blank" },
+    });
+
+    expect(details.navLinks).toEqual([]);
+    expect(details.gmail).toBe("mailto:hello@example.com");
+    expect(details.primaryAction).toEqual({
+      label: "Contact",
+      href: "mailto:hello@example.com",
+      ariaLabel: "Contact",
+      target: "_blank",
+      rel: "noopener noreferrer",
+    });
+  });
+});
+
+describe("normalizeGmailHref", () => {
+  it("normalizes plain email and preserves mailto values", () => {
+    expect(normalizeGmailHref("hello@example.com")).toBe("mailto:hello@example.com");
+    expect(normalizeGmailHref("mailto:hello@example.com")).toBe("mailto:hello@example.com");
   });
 });

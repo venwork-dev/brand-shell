@@ -54,10 +54,37 @@ export function Layout({ children }: { children: React.ReactNode }) {
 The package now exports pure TypeScript helpers you can reuse in other framework adapters:
 
 ```ts
-import { buildShellViewModel, detailsToSocialLinks, themeToCssVariables } from "brand-shell";
+import {
+  buildShellViewModel,
+  validateBrandDetails,
+  validateBrandTheme,
+} from "brand-shell";
 ```
 
 `buildShellViewModel` normalizes nav links and CTA behavior (target/rel/variants) so framework adapters share the same rules.
+
+Validation + normalization are also exported for external integrations. The adapters run these checks in development mode.
+
+```ts
+const detailsCheck = validateBrandDetails(input.details);
+const themeCheck = validateBrandTheme(input.theme);
+
+if (!detailsCheck.valid || !themeCheck.valid) {
+  throw new Error([...detailsCheck.errors, ...themeCheck.errors].join("\n"));
+}
+
+const normalizedDetails = detailsCheck.normalized;
+const normalizedTheme = themeCheck.normalized;
+```
+
+### JSON schema
+
+You can validate payloads in any runtime using the published schema:
+
+```ts
+import schema from "brand-shell/schema";
+// also available as: brand-shell/schema.json
+```
 
 ### Web Components adapter
 

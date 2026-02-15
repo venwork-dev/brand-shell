@@ -1,5 +1,12 @@
 import type { BrandDetails, BrandTheme } from "./types";
-import { buildShellViewModel } from "./core";
+import {
+  assertValidBrandDetails,
+  assertValidBrandTheme,
+  buildShellViewModel,
+  normalizeBrandDetails,
+  normalizeBrandTheme,
+  shouldValidateInDev,
+} from "./core";
 import type { SocialPlatform } from "./core";
 import type { IconProps } from "./icons";
 import { themeToStyle } from "./react/theme";
@@ -19,15 +26,26 @@ export interface HeaderProps {
 }
 
 export function Header({ details, theme, className }: HeaderProps) {
-  const style = themeToStyle(theme);
-  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
+  if (shouldValidateInDev()) {
+    assertValidBrandDetails(details, "brand-shell/Header details");
+    assertValidBrandTheme(theme, "brand-shell/Header theme");
+  }
+
+  const normalizedDetails = normalizeBrandDetails(details);
+  const normalizedTheme = normalizeBrandTheme(theme);
+  const style = themeToStyle(normalizedTheme);
+  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(normalizedDetails);
   const combinedClassName = ["brand-shell-header", className].filter(Boolean).join(" ");
-  const brandIdentity = details.homeHref ? (
-    <a href={details.homeHref} className="brand-shell-header__name" aria-label={`${details.name} home`}>
-      {details.name}
+  const brandIdentity = normalizedDetails.homeHref ? (
+    <a
+      href={normalizedDetails.homeHref}
+      className="brand-shell-header__name"
+      aria-label={`${normalizedDetails.name} home`}
+    >
+      {normalizedDetails.name}
     </a>
   ) : (
-    <span className="brand-shell-header__name">{details.name}</span>
+    <span className="brand-shell-header__name">{normalizedDetails.name}</span>
   );
 
   return (

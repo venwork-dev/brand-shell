@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brand-shell.dev/schema/brand-shell.schema.json",
+  "title": "Brand Shell Contract",
+  "description": "JSON Schema for Brand Shell details and theme payloads.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["details"],
+  "properties": {
+    "details": {
+      "$ref": "#/$defs/BrandDetails"
+    },
+    "theme": {
+      "$ref": "#/$defs/BrandTheme"
+    }
+  },
+  "$defs": {
+    "Target": {
+      "type": "string",
+      "enum": ["_blank", "_self", "_parent", "_top"]
+    },
+    "Variant": {
+      "type": "string",
+      "enum": ["primary", "secondary", "ghost"]
+    },
+    "BrandNavLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "href"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "href": { "type": "string", "minLength": 1 },
+        "ariaLabel": { "type": "string", "minLength": 1 },
+        "target": { "$ref": "#/$defs/Target" },
+        "rel": { "type": "string", "minLength": 1 }
+      }
+    },
+    "BrandAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "href"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "href": { "type": "string", "minLength": 1 },
+        "ariaLabel": { "type": "string", "minLength": 1 },
+        "target": { "$ref": "#/$defs/Target" },
+        "rel": { "type": "string", "minLength": 1 },
+        "variant": { "$ref": "#/$defs/Variant" }
+      }
+    },
+    "BrandDetails": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "homeHref": { "type": "string", "minLength": 1 },
+        "navLinks": {
+          "type": "array",
+          "default": [],
+          "items": { "$ref": "#/$defs/BrandNavLink" }
+        },
+        "primaryAction": { "$ref": "#/$defs/BrandAction" },
+        "secondaryAction": { "$ref": "#/$defs/BrandAction" },
+        "linkedin": { "type": "string", "minLength": 1 },
+        "gmail": { "type": "string", "minLength": 1 },
+        "github": { "type": "string", "minLength": 1 },
+        "twitter": { "type": "string", "minLength": 1 },
+        "discord": { "type": "string", "minLength": 1 },
+        "website": { "type": "string", "minLength": 1 },
+        "tagline": { "type": "string", "minLength": 1 }
+      }
+    },
+    "BrandTheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "primaryColor": { "type": "string", "minLength": 1 },
+        "backgroundColor": { "type": "string", "minLength": 1 },
+        "textColor": { "type": "string", "minLength": 1 },
+        "fontFamily": { "type": "string", "minLength": 1 },
+        "linkColor": { "type": "string", "minLength": 1 },
+        "socialIconSize": { "type": "string", "minLength": 1 },
+        "buttonTextColor": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

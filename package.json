@@ -23,6 +23,8 @@
       "import": "./dist/svelte.mjs",
       "types": "./dist/svelte.d.mts"
     },
+    "./schema": "./dist/brand-shell.schema.json",
+    "./schema.json": "./dist/brand-shell.schema.json",
     "./default.css": "./dist/default.css",
     "./dist/default.css": "./dist/default.css"
   },

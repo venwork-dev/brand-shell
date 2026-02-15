@@ -1,5 +1,12 @@
 import type { BrandDetails, BrandTheme } from "./types";
-import { buildShellViewModel } from "./core";
+import {
+  assertValidBrandDetails,
+  assertValidBrandTheme,
+  buildShellViewModel,
+  normalizeBrandDetails,
+  normalizeBrandTheme,
+  shouldValidateInDev,
+} from "./core";
 import type { SocialPlatform } from "./core";
 import type { IconProps } from "./icons";
 import { themeToStyle } from "./react/theme";
@@ -19,8 +26,15 @@ export interface FooterProps {
 }
 
 export function Footer({ details, theme, className }: FooterProps) {
-  const style = themeToStyle(theme);
-  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
+  if (shouldValidateInDev()) {
+    assertValidBrandDetails(details, "brand-shell/Footer details");
+    assertValidBrandTheme(theme, "brand-shell/Footer theme");
+  }
+
+  const normalizedDetails = normalizeBrandDetails(details);
+  const normalizedTheme = normalizeBrandTheme(theme);
+  const style = themeToStyle(normalizedTheme);
+  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(normalizedDetails);
   const combinedClassName = ["brand-shell-footer", className].filter(Boolean).join(" ");
 
   return (
@@ -28,8 +42,8 @@ export function Footer({ details, theme, className }: FooterProps) {
       <div className="brand-shell-footer__inner">
         <div className="brand-shell-footer__top">
           <div className="brand-shell-footer__brand">
-            <p className="brand-shell-footer__name">{details.name}</p>
-            {details.tagline && <p className="brand-shell-footer__tagline">{details.tagline}</p>}
+            <p className="brand-shell-footer__name">{normalizedDetails.name}</p>
+            {normalizedDetails.tagline && <p className="brand-shell-footer__tagline">{normalizedDetails.tagline}</p>}
           </div>
           {navLinks.length > 0 && (
             <nav className="brand-shell-footer__nav" aria-label="Footer">
@@ -88,7 +102,7 @@ export function Footer({ details, theme, className }: FooterProps) {
             </div>
           )}
         </div>
-        <p className="brand-shell-footer__copy">&copy; {new Date().getFullYear()} {details.name}</p>
+        <p className="brand-shell-footer__copy">&copy; {new Date().getFullYear()} {normalizedDetails.name}</p>
       </div>
     </footer>
   );
