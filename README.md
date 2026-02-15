@@ -190,4 +190,14 @@ Minimal demo apps for React, Vue, and Svelte are available under `examples/` and
 - `examples/vue-vite`
 - `examples/svelte-vite`
 
-See `examples/README.md` for commands.
+Quick commands from repo root:
+
+```bash
+bun run demo:setup
+bun run demo:dev:react
+bun run demo:dev:vue
+bun run demo:dev:svelte
+bun run demo:build:all
+```
+
+See `examples/README.md` for details.
