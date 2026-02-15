@@ -198,6 +198,7 @@ bun run demo:dev:react
 bun run demo:dev:vue
 bun run demo:dev:svelte
 bun run demo:build:all
+bun run test:smoke
 ```
 
 See `examples/README.md` for details.

@@ -2,8 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "types": ["node"]
   },
-  "include": ["src", ".storybook", "vitest.shims.d.ts", "tsdown.config.ts"],
+  "include": ["src", "tests", ".storybook", "vitest.shims.d.ts", "tsdown.config.ts", "vitest.smoke.config.ts"],
   "exclude": ["node_modules", "dist", "storybook-static"]
 }

@@ -37,6 +37,7 @@
     "demo:dev:vue": "bun run build && bun run --cwd examples/vue-vite dev",
     "demo:dev:svelte": "bun run build && bun run --cwd examples/svelte-vite dev",
     "test": "vitest run",
+    "test:smoke": "vitest run --config vitest.smoke.config.ts",
     "typecheck": "tsc -p tsconfig.check.json --noEmit",
     "lint": "bun run typecheck",
     "check": "bun run lint && bun run test && bun run build",
@@ -53,6 +54,7 @@
     }
   },
   "devDependencies": {
+    "@types/node": "^22.10.7",
     "@types/react": "^18.3.12",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

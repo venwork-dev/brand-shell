@@ -31,3 +31,12 @@ jobs:
 
       - name: Build
         run: bun run build
+
+      - name: Install Demo Dependencies
+        run: bun run demo:setup:react && bun run demo:setup:vue && bun run demo:setup:svelte
+
+      - name: Demo Build Guard
+        run: bun run demo:build:all
+
+      - name: Demo Smoke Tests
+        run: bun run test:smoke

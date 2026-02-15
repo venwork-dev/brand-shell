@@ -36,6 +36,12 @@ bun run demo:dev:svelte
 bun run demo:build:all
 ```
 
+5. Run smoke checks for all demo builds:
+
+```bash
+bun run test:smoke
+```
+
 You can still run demos directly from each demo folder:
 
 ```bash
