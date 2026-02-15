@@ -49,6 +49,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 ```
 
+### Framework-agnostic core helpers
+
+The package now exports pure TypeScript helpers you can reuse in other framework adapters:
+
+```ts
+import { detailsToSocialLinks, themeToCssVariables } from "brand-shell";
+```
+
 ### Props reference
 
 #### `BrandDetails`

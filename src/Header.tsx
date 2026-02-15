@@ -1,7 +1,8 @@
 import type { BrandDetails, BrandTheme, BrandAction } from "./types";
-import { themeToStyle, detailsToSocialLinks } from "./utils";
-import type { SocialPlatform } from "./utils";
+import { detailsToSocialLinks } from "./core/social";
+import type { SocialPlatform } from "./core/social";
 import type { IconProps } from "./icons";
+import { themeToStyle } from "./react/theme";
 import {
   DiscordIcon,
   GithubIcon,
