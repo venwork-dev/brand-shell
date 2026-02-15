@@ -70,7 +70,7 @@ export const CustomTheme: Story = {
       backgroundColor: "#f8fafc",
       textColor: "#0f172a",
       linkColor: "#0f766e",
-      fontFamily: '"Playfair Display", serif',
+      fontFamily: '"Space Grotesk", "Avenir Next", "Segoe UI", sans-serif',
     },
     socialIconSize: "2rem",
   },

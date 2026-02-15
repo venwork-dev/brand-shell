@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import type { CSSProperties } from "react";
 
 import { Header, Footer } from "../index";
 import type { BrandDetails } from "../types";
@@ -29,6 +30,37 @@ const fullDetails: BrandDetails = {
   },
 };
 
+const shellRootStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "100vh",
+};
+
+const shellMainStyle: CSSProperties = {
+  flex: 1,
+  padding: "clamp(1.25rem, 2.8vw, 2.25rem)",
+  maxWidth: "72rem",
+  margin: "0 auto",
+  width: "100%",
+  fontFamily: '"Inter", "Avenir Next", "Segoe UI", sans-serif',
+  lineHeight: 1.7,
+};
+
+const shellHeadingStyle: CSSProperties = {
+  margin: "0 0 0.9rem 0",
+  fontSize: "clamp(1.55rem, 3.1vw, 2.05rem)",
+  letterSpacing: "-0.025em",
+  lineHeight: 1.15,
+  fontFamily: '"Space Grotesk", "Avenir Next", "Segoe UI", sans-serif',
+};
+
+const shellParagraphStyle: CSSProperties = {
+  margin: 0,
+  maxWidth: "65ch",
+  color: "#334155",
+  fontSize: "clamp(1rem, 1.45vw, 1.06rem)",
+};
+
 const meta = {
   title: "Brand Shell/Shell",
   tags: ["autodocs"],
@@ -43,21 +75,11 @@ type Story = StoryObj<typeof meta>;
 
 export const FullLayout: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div style={shellRootStyle}>
       <Header details={fullDetails} />
-      <main
-        style={{
-          flex: 1,
-          padding: "2rem",
-          maxWidth: "72rem",
-          margin: "0 auto",
-          width: "100%",
-        }}
-      >
-        <h1 style={{ margin: "0 0 1rem 0", fontSize: "1.75rem" }}>
-          Page content
-        </h1>
-        <p style={{ margin: 0, color: "#334155" }}>
+      <main style={shellMainStyle}>
+        <h1 style={shellHeadingStyle}>Page content</h1>
+        <p style={shellParagraphStyle}>
           This story shows Header + main + Footer together—the typical layout for
           a site using brand-shell.
         </p>
@@ -69,7 +91,7 @@ export const FullLayout: Story = {
 
 export const LightTheme: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div style={shellRootStyle}>
       <Header
         details={fullDetails}
         theme={{
@@ -83,19 +105,13 @@ export const LightTheme: Story = {
       />
       <main
         style={{
-          flex: 1,
-          padding: "2rem",
-          maxWidth: "72rem",
-          margin: "0 auto",
-          width: "100%",
+          ...shellMainStyle,
           background: "#f1f5f9",
           color: "#0f172a",
         }}
       >
-        <h1 style={{ margin: "0 0 1rem 0", fontSize: "1.75rem" }}>
-          Light theme example
-        </h1>
-        <p style={{ margin: 0 }}>
+        <h1 style={shellHeadingStyle}>Light theme example</h1>
+        <p style={{ ...shellParagraphStyle, color: "#334155" }}>
           Pass a custom theme to adapt the shell to light backgrounds.
         </p>
       </main>

@@ -10,9 +10,9 @@
   };
 </script>
 
-<div class="app">
+<div class="demo-app">
   <brand-header use:brandShell={shellProps}></brand-header>
-  <main class="content">
+  <main class="demo-main demo-layout-main">
     <h1>Svelte Demo</h1>
     <p>
       This app uses <code>brand-shell/svelte</code> and the shared contract from
@@ -21,24 +21,3 @@
   </main>
   <brand-footer use:brandShell={shellProps}></brand-footer>
 </div>
-
-<style>
-  .app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .content {
-    flex: 1;
-    max-width: 72rem;
-    width: 100%;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    box-sizing: border-box;
-  }
-
-  h1 {
-    margin-top: 0;
-  }
-</style>

@@ -30,8 +30,11 @@ body {
   flex-direction: column;
 }
 
-.demo-main {
+.demo-layout-main {
   flex: 1;
+}
+
+.demo-main {
   width: min(72rem, 100%);
   margin: 0 auto;
   padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1rem, 2.8vw, 1.5rem);

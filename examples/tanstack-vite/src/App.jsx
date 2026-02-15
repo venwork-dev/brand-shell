@@ -8,9 +8,9 @@ const { details, theme } = contract;
 
 function ShellLayout() {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="demo-app">
       <Header details={details} theme={theme} />
-      <main style={{ flex: 1 }}>
+      <main className="demo-layout-main">
         <Outlet />
       </main>
       <Footer details={details} theme={theme} />
@@ -20,8 +20,8 @@ function ShellLayout() {
 
 function HomePage() {
   return (
-    <section style={{ maxWidth: "72rem", margin: "0 auto", padding: "2rem 1rem" }}>
-      <h1 style={{ marginTop: 0 }}>TanStack Demo</h1>
+    <section className="demo-main">
+      <h1>TanStack Demo</h1>
       <p>
         This app uses TanStack Router with the React adapter and the shared contract from
         <code> examples/shared/brand-contract.json</code>.
