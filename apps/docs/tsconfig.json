@@ -9,7 +9,16 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "types": ["vite/client"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "brand-shell": ["../../src/index.ts"],
+      "brand-shell/web": ["../../src/web/index.ts"],
+      "brand-shell/vue": ["../../src/vue/index.ts"],
+      "brand-shell/svelte": ["../../src/svelte/index.ts"],
+      "brand-shell/schema": ["../../schemas/brand-shell.schema.json"],
+      "brand-shell/schema.json": ["../../schemas/brand-shell.schema.json"],
+      "brand-shell/default.css": ["../../styles/default.css"]
+    }
   },
   "include": ["src", "vite.config.ts"]
 }

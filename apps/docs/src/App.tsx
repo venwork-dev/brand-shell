@@ -137,6 +137,27 @@ const SECURITY_GUARDS = [
   },
 ];
 
+const DOCS_SHELL_DETAILS: BrandDetails = {
+  name: "Brand Shell",
+  homeHref: "#top",
+  navLinks: [
+    { label: "How it works", href: "#how-it-works" },
+    { label: "Frameworks", href: "#quickstart" },
+    { label: "Security", href: "#security" },
+    { label: "Playground", href: "#playground" },
+  ],
+  primaryAction: { label: "Try Live Preview", href: "#preview" },
+  tagline: "Build once. Reuse everywhere with one validated shell contract.",
+};
+
+const DOCS_SHELL_THEME: BrandTheme = {
+  primaryColor: "#2dd4bf",
+  backgroundColor: "rgba(2, 6, 23, 0.94)",
+  textColor: "#f8fafc",
+  linkColor: "#cbd5e1",
+  fontFamily: '"Space Grotesk", "Manrope", system-ui, sans-serif',
+};
+
 const fallbackDetails = validateBrandDetails(DEFAULT_DETAILS).normalized ?? DEFAULT_DETAILS;
 const fallbackTheme = validateBrandTheme(DEFAULT_THEME).normalized ?? DEFAULT_THEME;
 
@@ -239,115 +260,119 @@ export default function App() {
   const previewTheme = validation.normalizedTheme ?? fallbackTheme;
 
   return (
-    <div className="docs-app">
-      <header className="hero">
-        <div className="hero__badge">Brand Shell Dev Webapp</div>
-        <h1>Build once. Reuse everywhere.</h1>
-        <p>
-          Brand Shell gives you a shared, validated header/footer contract across React, Next.js, TanStack Router, Vue,
-          Svelte, and Web Components.
-          Test payloads here before integrating with customer apps.
-        </p>
-      </header>
+    <div className="docs-site" id="top">
+      <Header className="docs-site-header" details={DOCS_SHELL_DETAILS} theme={DOCS_SHELL_THEME} />
+      <div className="docs-app">
+        <header className="hero">
+          <div className="hero__badge">Brand Shell Dev Webapp</div>
+          <h1>Build once. Reuse everywhere.</h1>
+          <p>
+            Brand Shell gives you a shared, validated header/footer contract across React, Next.js, TanStack Router, Vue,
+            Svelte, and Web Components.
+            Test payloads here before integrating with customer apps.
+          </p>
+        </header>
 
-      <main className="content-grid">
-        <section className="panel">
-          <h2>How it works</h2>
-          <div className="work-grid">
-            {HOW_IT_WORKS.map((item) => (
-              <article key={item.title} className="work-card">
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        <main className="content-grid">
+          <section className="panel" id="how-it-works">
+            <h2>How it works</h2>
+            <div className="work-grid">
+              {HOW_IT_WORKS.map((item) => (
+                <article key={item.title} className="work-card">
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
 
-        <section className="panel">
-          <h2>Framework quickstart</h2>
-          <div className="framework-tabs">
-            {FRAMEWORK_ORDER.map((framework) => (
+          <section className="panel" id="quickstart">
+            <h2>Framework quickstart</h2>
+            <div className="framework-tabs">
+              {FRAMEWORK_ORDER.map((framework) => (
+                <button
+                  key={framework}
+                  className={framework === activeFramework ? "tab tab--active" : "tab"}
+                  onClick={() => setActiveFramework(framework)}
+                  type="button"
+                >
+                  {FRAMEWORK_LABELS[framework]}
+                </button>
+              ))}
+            </div>
+            <pre className="code-block">
+              <code>{FRAMEWORK_SNIPPETS[activeFramework]}</code>
+            </pre>
+          </section>
+
+          <section className="panel panel--security" id="security">
+            <h2>Security by default</h2>
+            <div className="security-grid">
+              {SECURITY_GUARDS.map((item) => (
+                <article key={item.title} className="security-card">
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="panel panel--playground" id="playground">
+            <div className="panel__header">
+              <h2>Contract playground</h2>
               <button
-                key={framework}
-                className={framework === activeFramework ? "tab tab--active" : "tab"}
-                onClick={() => setActiveFramework(framework)}
+                className="ghost-button"
+                onClick={() => {
+                  setDetailsText(DEFAULT_DETAILS_TEXT);
+                  setThemeText(DEFAULT_THEME_TEXT);
+                }}
                 type="button"
               >
-                {FRAMEWORK_LABELS[framework]}
+                Reset defaults
               </button>
-            ))}
-          </div>
-          <pre className="code-block">
-            <code>{FRAMEWORK_SNIPPETS[activeFramework]}</code>
-          </pre>
-        </section>
+            </div>
 
-        <section className="panel panel--security">
-          <h2>Security by default</h2>
-          <div className="security-grid">
-            {SECURITY_GUARDS.map((item) => (
-              <article key={item.title} className="security-card">
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+            <div className="playground-grid">
+              <label className="editor">
+                <span>details (BrandDetails)</span>
+                <textarea value={detailsText} onChange={(event) => setDetailsText(event.target.value)} />
+              </label>
+              <label className="editor">
+                <span>theme (BrandTheme)</span>
+                <textarea value={themeText} onChange={(event) => setThemeText(event.target.value)} />
+              </label>
+            </div>
 
-        <section className="panel panel--playground">
-          <div className="panel__header">
-            <h2>Contract playground</h2>
-            <button
-              className="ghost-button"
-              onClick={() => {
-                setDetailsText(DEFAULT_DETAILS_TEXT);
-                setThemeText(DEFAULT_THEME_TEXT);
-              }}
-              type="button"
-            >
-              Reset defaults
-            </button>
-          </div>
+            <div className={validation.valid ? "status status--ok" : "status status--warn"}>
+              {validation.valid
+                ? "Payload is valid. Preview uses your edited contract."
+                : "Validation errors detected. Preview is using safe fallback values."}
+            </div>
 
-          <div className="playground-grid">
-            <label className="editor">
-              <span>details (BrandDetails)</span>
-              <textarea value={detailsText} onChange={(event) => setDetailsText(event.target.value)} />
-            </label>
-            <label className="editor">
-              <span>theme (BrandTheme)</span>
-              <textarea value={themeText} onChange={(event) => setThemeText(event.target.value)} />
-            </label>
-          </div>
+            <div className="error-grid">
+              <ErrorList title="Core Details Validation" errors={validation.detailsErrors} />
+              <ErrorList title="Core Theme Validation" errors={validation.themeErrors} />
+              <ErrorList title="JSON Schema (Ajv) Validation" errors={validation.schemaErrors} />
+            </div>
+          </section>
 
-          <div className={validation.valid ? "status status--ok" : "status status--warn"}>
-            {validation.valid
-              ? "Payload is valid. Preview uses your edited contract."
-              : "Validation errors detected. Preview is using safe fallback values."}
-          </div>
-
-          <div className="error-grid">
-            <ErrorList title="Core Details Validation" errors={validation.detailsErrors} />
-            <ErrorList title="Core Theme Validation" errors={validation.themeErrors} />
-            <ErrorList title="JSON Schema (Ajv) Validation" errors={validation.schemaErrors} />
-          </div>
-        </section>
-
-        <section className="panel panel--preview">
-          <h2>Live preview</h2>
-          <div className="preview-shell">
-            <Header details={previewDetails} theme={previewTheme} />
-            <main className="preview-main">
-              <h3>Integration Preview</h3>
-              <p>
-                This preview uses the same adapter and normalized contract you will use in consuming apps.
-                Fix validation errors before shipping configuration to customers.
-              </p>
-            </main>
-            <Footer details={previewDetails} theme={previewTheme} />
-          </div>
-        </section>
-      </main>
+          <section className="panel panel--preview" id="preview">
+            <h2>Live preview</h2>
+            <div className="preview-shell">
+              <Header details={previewDetails} theme={previewTheme} />
+              <main className="preview-main">
+                <h3>Integration Preview</h3>
+                <p>
+                  This preview uses the same adapter and normalized contract you will use in consuming apps.
+                  Fix validation errors before shipping configuration to customers.
+                </p>
+              </main>
+              <Footer details={previewDetails} theme={previewTheme} />
+            </div>
+          </section>
+        </main>
+      </div>
+      <Footer className="docs-site-footer" details={DOCS_SHELL_DETAILS} theme={DOCS_SHELL_THEME} />
     </div>
   );
 }
