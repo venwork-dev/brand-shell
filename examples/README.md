@@ -26,6 +26,8 @@ bun run demo:setup
 
 ```bash
 bun run demo:dev:react
+bun run demo:dev:next
+bun run demo:dev:tanstack
 bun run demo:dev:vue
 bun run demo:dev:svelte
 ```
@@ -53,5 +55,7 @@ bun run dev
 ## Demos
 
 - `examples/react-vite` uses `brand-shell` (React components)
+- `examples/next-app` uses Next.js App Router + `brand-shell` (React components)
+- `examples/tanstack-vite` uses TanStack Router + `brand-shell` (React components)
 - `examples/vue-vite` uses `brand-shell/vue` (Vue adapter)
 - `examples/svelte-vite` uses `brand-shell/svelte` (Svelte action adapter)

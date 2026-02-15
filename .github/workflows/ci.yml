@@ -33,10 +33,55 @@ jobs:
         run: bun run build
 
       - name: Install Demo Dependencies
-        run: bun run demo:setup:react && bun run demo:setup:vue && bun run demo:setup:svelte
+        run: bun run demo:setup:react && bun run demo:setup:vue && bun run demo:setup:svelte && bun run demo:setup:next && bun run demo:setup:tanstack
 
       - name: Demo Build Guard
         run: bun run demo:build:all
 
       - name: Demo Smoke Tests
         run: bun run test:smoke
+
+  consumer-matrix:
+    name: Consumer Matrix (${{ matrix.consumer.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        consumer:
+          - name: react
+            setup: demo:setup:react
+            build: demo:build:react
+          - name: vue
+            setup: demo:setup:vue
+            build: demo:build:vue
+          - name: svelte
+            setup: demo:setup:svelte
+            build: demo:build:svelte
+          - name: next
+            setup: demo:setup:next
+            build: demo:build:next
+          - name: tanstack
+            setup: demo:setup:tanstack
+            build: demo:build:tanstack
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build Package
+        run: bun run build
+
+      - name: Install Consumer Dependencies
+        run: bun run ${{ matrix.consumer.setup }}
+
+      - name: Build Consumer
+        run: bun run ${{ matrix.consumer.build }}
+
+      - name: Smoke Consumer
+        run: DEMO_SMOKE_CONSUMER=${{ matrix.consumer.name }} bun run test:smoke

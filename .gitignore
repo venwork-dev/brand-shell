@@ -2,6 +2,8 @@ node_modules
 dist
 apps/**/dist
 apps/**/node_modules
+examples/**/dist
+examples/**/.next
 *.tsbuildinfo
 storybook-static
 .DS_Store

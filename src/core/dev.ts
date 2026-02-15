@@ -13,9 +13,9 @@ export function shouldValidateInDev(): boolean {
     return nodeEnv !== "production";
   }
 
-  const importMeta = import.meta as unknown as ImportMetaLike;
-  if (typeof importMeta.env?.DEV === "boolean") {
-    return importMeta.env.DEV;
+  const { env } = import.meta as unknown as ImportMetaLike;
+  if (typeof env?.DEV === "boolean") {
+    return env.DEV;
   }
 
   return false;

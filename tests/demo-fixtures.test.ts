@@ -32,7 +32,27 @@ const fixtures: DemoFixture[] = [
     heading: "Svelte Demo",
     rootId: "app",
   },
+  {
+    name: "tanstack",
+    distDir: "examples/tanstack-vite/dist",
+    heading: "TanStack Demo",
+    rootId: "root",
+  },
 ];
+
+const consumerFilter = process.env.DEMO_SMOKE_CONSUMER?.trim();
+const supportedConsumers = [...fixtures.map((fixture) => fixture.name), "next"];
+
+if (consumerFilter && !supportedConsumers.includes(consumerFilter)) {
+  throw new Error(
+    `Unsupported DEMO_SMOKE_CONSUMER='${consumerFilter}'. Supported values: ${supportedConsumers.join(", ")}`,
+  );
+}
+
+const fixturesToTest = consumerFilter
+  ? fixtures.filter((fixture) => fixture.name === consumerFilter)
+  : fixtures;
+const shouldCheckNextBuild = !consumerFilter || consumerFilter === "next";
 
 function readAssets(assetsDir: string, extension: ".css" | ".js"): string {
   const files = readdirSync(assetsDir).filter((file: string) => file.endsWith(extension));
@@ -46,14 +66,14 @@ function readAssets(assetsDir: string, extension: ".css" | ".js"): string {
 }
 
 describe("demo fixtures smoke", () => {
-  for (const fixture of fixtures) {
+  for (const fixture of fixturesToTest) {
     it(`${fixture.name} build contains rendered app output and shared shell styles`, () => {
       const distDir = path.join(rootDir, fixture.distDir);
       const indexPath = path.join(distDir, "index.html");
       const assetsDir = path.join(distDir, "assets");
 
       if (!existsSync(indexPath)) {
-        throw new Error(`Missing ${indexPath}. Run 'bun run demo:build:all' first.`);
+        throw new Error(`Missing ${indexPath}. Run 'bun run demo:build:${fixture.name}' first.`);
       }
 
       const indexHtml = readFileSync(indexPath, "utf8");
@@ -67,6 +87,24 @@ describe("demo fixtures smoke", () => {
       expect(jsBundle).toContain(fixture.heading);
       expect(cssBundle).toContain(".brand-shell-header");
       expect(cssBundle).toContain(".brand-shell-footer");
+    });
+  }
+
+  if (shouldCheckNextBuild) {
+    it("next build output contains app route manifests", () => {
+      const nextRoot = path.join(rootDir, "examples/next-app/.next");
+      const buildIdPath = path.join(nextRoot, "BUILD_ID");
+      const appPathsManifestPath = path.join(nextRoot, "server", "app-paths-manifest.json");
+
+      if (!existsSync(buildIdPath)) {
+        throw new Error(`Missing ${buildIdPath}. Run 'bun run demo:build:next' first.`);
+      }
+      if (!existsSync(appPathsManifestPath)) {
+        throw new Error(`Missing ${appPathsManifestPath}. Run 'bun run demo:build:next' first.`);
+      }
+
+      const manifest = JSON.parse(readFileSync(appPathsManifestPath, "utf8")) as Record<string, string>;
+      expect(Object.keys(manifest)).toContain("/page");
     });
   }
 });

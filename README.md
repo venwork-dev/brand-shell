@@ -1,6 +1,6 @@
 ## Brand Shell
 
-Reusable header and footer components that ship with a premium default theme, typed props, and Storybook-based docs. Drop the package into React, Vue, or Svelte apps to keep your brand chrome consistent across projects.
+Reusable header and footer components that ship with a premium default theme, typed props, and Storybook-based docs. Drop the package into React, Next.js, TanStack Router, Vue, or Svelte apps to keep your brand chrome consistent across projects.
 
 ### Installation
 
@@ -252,10 +252,12 @@ The stories showcase default, themed, and minimal configurations and expose cont
 
 ### Framework demo consumers
 
-Minimal demo apps for React, Vue, and Svelte are available under `examples/` and all share
+Minimal demo apps for React (Vite), Next.js, TanStack Router (Vite), Vue, and Svelte are available under `examples/` and all share
 `examples/shared/brand-contract.json`.
 
 - `examples/react-vite`
+- `examples/next-app`
+- `examples/tanstack-vite`
 - `examples/vue-vite`
 - `examples/svelte-vite`
 
