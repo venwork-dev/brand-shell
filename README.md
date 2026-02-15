@@ -86,6 +86,8 @@ import schema from "brand-shell/schema";
 // also available as: brand-shell/schema.json
 ```
 
+This repo validates the schema with Ajv in unit tests (`src/core/schema.test.ts`) to catch contract regressions before release.
+
 ### Web Components adapter
 
 You can also use framework-agnostic custom elements:
