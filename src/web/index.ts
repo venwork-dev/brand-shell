@@ -1,5 +1,12 @@
-import { detailsToSocialLinks, themeToCssVariables } from "../core";
-import type { BrandAction, BrandDetails, BrandNavLink, BrandTheme, SocialPlatform } from "../core";
+import { buildShellViewModel, themeToCssVariables } from "../core";
+import type {
+  BrandDetails,
+  BrandTheme,
+  ShellActionLink,
+  ShellNavLink,
+  SocialLink,
+  SocialPlatform,
+} from "../core";
 
 export type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "../core";
 
@@ -225,17 +232,16 @@ function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClas
   const actions = document.createElement("div");
   actions.className = "brand-shell-header__actions";
 
-  const navLinks = details.navLinks ?? [];
+  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
+
   if (navLinks.length > 0) {
     actions.append(createNav(navLinks, "brand-shell-header", "Primary"));
   }
 
-  const ctaLinks = [details.secondaryAction, details.primaryAction].filter((action): action is BrandAction => Boolean(action));
   if (ctaLinks.length > 0) {
-    actions.append(createCtas(ctaLinks, details.primaryAction, "brand-shell-header__ctas"));
+    actions.append(createCtas(ctaLinks, "brand-shell-header__ctas"));
   }
 
-  const socialLinks = detailsToSocialLinks(details);
   if (socialLinks.length > 0) {
     actions.append(createSocialLinks(socialLinks, "brand-shell-header__social", "brand-shell-header__social-link"));
   }
@@ -265,17 +271,16 @@ function createFooter(details: BrandDetails, theme: BrandTheme | null, shellClas
   }
   top.append(brand);
 
-  const navLinks = details.navLinks ?? [];
+  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
+
   if (navLinks.length > 0) {
     top.append(createNav(navLinks, "brand-shell-footer", "Footer"));
   }
 
-  const ctaLinks = [details.secondaryAction, details.primaryAction].filter((action): action is BrandAction => Boolean(action));
   if (ctaLinks.length > 0) {
-    top.append(createCtas(ctaLinks, details.primaryAction, "brand-shell-footer__ctas"));
+    top.append(createCtas(ctaLinks, "brand-shell-footer__ctas"));
   }
 
-  const socialLinks = detailsToSocialLinks(details);
   if (socialLinks.length > 0) {
     top.append(createSocialLinks(socialLinks, "brand-shell-footer__social", "brand-shell-footer__social-link"));
   }
@@ -287,7 +292,7 @@ function createFooter(details: BrandDetails, theme: BrandTheme | null, shellClas
   return footer;
 }
 
-function createNav(links: BrandNavLink[], blockClass: "brand-shell-header" | "brand-shell-footer", ariaLabel: string): HTMLElement {
+function createNav(links: ShellNavLink[], blockClass: "brand-shell-header" | "brand-shell-footer", ariaLabel: string): HTMLElement {
   const nav = document.createElement("nav");
   nav.className = `${blockClass}__nav`;
   nav.setAttribute("aria-label", ariaLabel);
@@ -298,11 +303,9 @@ function createNav(links: BrandNavLink[], blockClass: "brand-shell-header" | "br
   for (const link of links) {
     const item = document.createElement("li");
     const anchor = createAnchor(link.href, `${blockClass}__link`, link.label);
-    const target = link.target ?? "_self";
-    const rel = link.rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
-    anchor.target = target;
-    if (rel) anchor.rel = rel;
-    anchor.setAttribute("aria-label", link.ariaLabel ?? link.label);
+    anchor.target = link.target;
+    if (link.rel) anchor.rel = link.rel;
+    anchor.setAttribute("aria-label", link.ariaLabel);
     item.append(anchor);
     list.append(item);
   }
@@ -311,20 +314,16 @@ function createNav(links: BrandNavLink[], blockClass: "brand-shell-header" | "br
   return nav;
 }
 
-function createCtas(actions: BrandAction[], primaryAction: BrandAction | undefined, containerClass: string): HTMLElement {
+function createCtas(actions: ShellActionLink[], containerClass: string): HTMLElement {
   const container = document.createElement("div");
   container.className = containerClass;
 
-  actions.forEach((action, index) => {
+  actions.forEach((action) => {
     const anchor = createAnchor(action.href, "brand-shell-button", action.label);
-    const variant = getCtaVariant(action, primaryAction, index === actions.length - 1);
-    anchor.className = joinClassNames(anchor.className, `brand-shell-button--${variant}`);
-    anchor.setAttribute("aria-label", action.ariaLabel ?? action.label);
-
-    const target = action.target ?? "_self";
-    const rel = action.rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
-    anchor.target = target;
-    if (rel) anchor.rel = rel;
+    anchor.className = joinClassNames(anchor.className, `brand-shell-button--${action.variant}`);
+    anchor.setAttribute("aria-label", action.ariaLabel);
+    anchor.target = action.target;
+    if (action.rel) anchor.rel = action.rel;
 
     container.append(anchor);
   });
@@ -333,7 +332,7 @@ function createCtas(actions: BrandAction[], primaryAction: BrandAction | undefin
 }
 
 function createSocialLinks(
-  links: ReturnType<typeof detailsToSocialLinks>,
+  links: SocialLink[],
   containerClass: string,
   linkClass: string,
 ): HTMLElement {
@@ -430,10 +429,6 @@ function createBaseSvg(): SVGSVGElement {
   svg.setAttribute("height", "1em");
   svg.setAttribute("aria-hidden", "true");
   return svg;
-}
-
-function getCtaVariant(action: BrandAction, primaryAction?: BrandAction, isLast?: boolean) {
-  return action.variant ?? (action === primaryAction || isLast ? "primary" : "secondary");
 }
 
 function applyThemeVariables(element: HTMLElement, theme: BrandTheme | null) {

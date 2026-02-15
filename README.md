@@ -54,8 +54,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 The package now exports pure TypeScript helpers you can reuse in other framework adapters:
 
 ```ts
-import { detailsToSocialLinks, themeToCssVariables } from "brand-shell";
+import { buildShellViewModel, detailsToSocialLinks, themeToCssVariables } from "brand-shell";
 ```
+
+`buildShellViewModel` normalizes nav links and CTA behavior (target/rel/variants) so framework adapters share the same rules.
 
 ### Web Components adapter
 

@@ -1,6 +1,6 @@
-import type { BrandAction, BrandDetails, BrandTheme } from "./types";
-import { detailsToSocialLinks } from "./core/social";
-import type { SocialPlatform } from "./core/social";
+import type { BrandDetails, BrandTheme } from "./types";
+import { buildShellViewModel } from "./core";
+import type { SocialPlatform } from "./core";
 import type { IconProps } from "./icons";
 import { themeToStyle } from "./react/theme";
 import {
@@ -20,11 +20,7 @@ export interface FooterProps {
 
 export function Footer({ details, theme, className }: FooterProps) {
   const style = themeToStyle(theme);
-  const navLinks = details.navLinks ?? [];
-  const socialLinks = detailsToSocialLinks(details);
-  const ctaLinks = [details.secondaryAction, details.primaryAction].filter(
-    (action): action is BrandAction => Boolean(action),
-  );
+  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
   const combinedClassName = ["brand-shell-footer", className].filter(Boolean).join(" ");
 
   return (
@@ -39,16 +35,14 @@ export function Footer({ details, theme, className }: FooterProps) {
             <nav className="brand-shell-footer__nav" aria-label="Footer">
               <ul className="brand-shell-footer__list">
                 {navLinks.map((link) => {
-                  const target = link.target ?? "_self";
-                  const rel = link.rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
                   return (
                     <li key={link.href + link.label}>
                       <a
                         href={link.href}
                         className="brand-shell-footer__link"
-                        aria-label={link.ariaLabel ?? link.label}
-                        target={target}
-                        rel={rel}
+                        aria-label={link.ariaLabel}
+                        target={link.target}
+                        rel={link.rel}
                       >
                         {link.label}
                       </a>
@@ -60,16 +54,14 @@ export function Footer({ details, theme, className }: FooterProps) {
           )}
           {ctaLinks.length > 0 && (
             <div className="brand-shell-footer__ctas">
-              {ctaLinks.map((action, index) => (
+              {ctaLinks.map((action) => (
                 <a
                   key={action.href + action.label}
                   href={action.href}
-                  className={["brand-shell-button", getCtaClassName(action, details.primaryAction, index === ctaLinks.length - 1)].join(
-                    " ",
-                  )}
-                  aria-label={action.ariaLabel ?? action.label}
-                  target={action.target ?? "_self"}
-                  rel={action.rel ?? (action.target === "_blank" ? "noopener noreferrer" : undefined)}
+                  className={["brand-shell-button", `brand-shell-button--${action.variant}`].join(" ")}
+                  aria-label={action.ariaLabel}
+                  target={action.target}
+                  rel={action.rel}
                 >
                   {action.label}
                 </a>
@@ -110,8 +102,3 @@ const SOCIAL_ICON_COMPONENTS: Record<SocialPlatform, (props: IconProps) => JSX.E
   twitter: TwitterIcon,
   discord: DiscordIcon,
 };
-
-function getCtaClassName(action: BrandAction, primaryAction?: BrandAction, isLast?: boolean) {
-  const variant = action.variant ?? (action === primaryAction || isLast ? "primary" : "secondary");
-  return `brand-shell-button--${variant}`;
-}
