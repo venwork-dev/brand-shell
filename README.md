@@ -12,7 +12,7 @@ bun add brand-shell
 
 ```tsx
 import { Header, Footer, type BrandDetails, type BrandTheme } from "brand-shell";
-import "brand-shell/dist/default.css";
+import "brand-shell/default.css";
 
 const details: BrandDetails = {
   name: "Mounika Thota",
@@ -63,7 +63,7 @@ You can also use framework-agnostic custom elements:
 
 ```ts
 import { registerBrandShellElements } from "brand-shell/web";
-import "brand-shell/dist/default.css";
+import "brand-shell/default.css";
 
 registerBrandShellElements();
 ```
@@ -180,3 +180,14 @@ bun run storybook
 ```
 
 The stories showcase default, themed, and minimal configurations and expose controls for nav links, CTA buttons, and theme tokens.
+
+### Framework demo consumers
+
+Minimal demo apps for React, Vue, and Svelte are available under `examples/` and all share
+`examples/shared/brand-contract.json`.
+
+- `examples/react-vite`
+- `examples/vue-vite`
+- `examples/svelte-vite`
+
+See `examples/README.md` for commands.

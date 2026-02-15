@@ -15,12 +15,14 @@
       "import": "./dist/web.mjs",
       "types": "./dist/web.d.mts"
     },
+    "./default.css": "./dist/default.css",
     "./dist/default.css": "./dist/default.css"
   },
   "files": [
     "dist"
   ],
   "scripts": {
+    "prepare": "bun run build",
     "build": "tsdown",
     "dev": "tsdown --watch",
     "test": "vitest run",

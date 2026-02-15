@@ -1,0 +1,27 @@
+{
+  "details": {
+    "name": "Brand Shell",
+    "homeHref": "/",
+    "navLinks": [
+      { "label": "Docs", "href": "/docs" },
+      { "label": "Blog", "href": "/blog" },
+      { "label": "About", "href": "/about" }
+    ],
+    "primaryAction": { "label": "Contact", "href": "mailto:hello@example.com" },
+    "secondaryAction": { "label": "GitHub", "href": "https://github.com/example", "target": "_blank" },
+    "website": "https://brand-shell.dev",
+    "linkedin": "https://linkedin.com/in/example",
+    "github": "https://github.com/example",
+    "twitter": "https://x.com/example",
+    "gmail": "hello@example.com",
+    "tagline": "One shared brand shell across frameworks."
+  },
+  "theme": {
+    "primaryColor": "#0ea5e9",
+    "backgroundColor": "#0f172a",
+    "textColor": "#f8fafc",
+    "linkColor": "#94a3b8",
+    "fontFamily": "\"Inter\", system-ui, sans-serif",
+    "socialIconSize": "2.25rem"
+  }
+}

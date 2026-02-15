@@ -126,7 +126,7 @@ export const ReadMe: Story = {
             {"{ Header, Footer }"} <span style={styles.codeKeyword}>from</span>{" "}
             <span style={styles.codeString}>"brand-shell"</span>;{"\n"}
             <span style={styles.codeKeyword}>import</span>{" "}
-            <span style={styles.codeString}>"brand-shell/dist/default.css"</span>;{"\n\n"}
+            <span style={styles.codeString}>"brand-shell/default.css"</span>;{"\n\n"}
             <span style={styles.codeKeyword}>const</span> details = {"{"}{"\n"}
             {"  "}name: <span style={styles.codeString}>"Your Name"</span>,{"\n"}
             {"  "}homeHref: <span style={styles.codeString}>"/"</span>,{"\n"}
