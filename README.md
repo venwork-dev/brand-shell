@@ -284,3 +284,33 @@ bun run docs:setup
 bun run docs:dev
 bun run docs:build
 ```
+
+### Versioning and release
+
+This repo uses Changesets for controlled SemVer bumps.
+
+- `docs-only` changes: no package version bump needed
+- package changes: add a changeset in the PR
+
+```bash
+bun run changeset
+```
+
+Bump policy:
+
+- `patch`: bug fixes and non-breaking internal changes
+- `minor`: backward-compatible features (new optional fields/exports/adapters)
+- `major`: breaking API/schema/peer range changes
+
+Commit enforcement:
+
+- PR commits must follow Conventional Commits (checked by `.github/workflows/commit-policy.yml`)
+- bump intent is auto-checked from commits:
+  - `feat` => at least `minor`
+  - `fix` / `perf` / `refactor` => at least `patch`
+  - `!` or `BREAKING CHANGE:` => `major`
+
+Release automation lives in `.github/workflows/release.yml` and runs after CI succeeds on `main`:
+
+- if pending changesets exist, it opens/updates a release PR
+- once that release PR is merged, it publishes to npm with provenance
