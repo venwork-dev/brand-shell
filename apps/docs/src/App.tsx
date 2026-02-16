@@ -158,6 +158,14 @@ const DOCS_SHELL_THEME: BrandTheme = {
   fontFamily: '"Space Grotesk", "Manrope", system-ui, sans-serif',
 };
 
+const SECTION_SHORTCUTS = [
+  { label: "How", href: "#how-it-works" },
+  { label: "Frameworks", href: "#quickstart" },
+  { label: "Security", href: "#security" },
+  { label: "Playground", href: "#playground" },
+  { label: "Preview", href: "#preview" },
+];
+
 const fallbackDetails = validateBrandDetails(DEFAULT_DETAILS).normalized ?? DEFAULT_DETAILS;
 const fallbackTheme = validateBrandTheme(DEFAULT_THEME).normalized ?? DEFAULT_THEME;
 
@@ -272,6 +280,13 @@ export default function App() {
             Test payloads here before integrating with customer apps.
           </p>
         </header>
+        <nav className="section-shortcuts" aria-label="Section shortcuts">
+          {SECTION_SHORTCUTS.map((shortcut) => (
+            <a key={shortcut.href} className="section-shortcuts__link" href={shortcut.href}>
+              {shortcut.label}
+            </a>
+          ))}
+        </nav>
 
         <main className="content-grid">
           <section className="panel" id="how-it-works">
