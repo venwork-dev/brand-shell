@@ -82,12 +82,14 @@ describe("validateBrandTheme", () => {
     const result = validateBrandTheme({
       primaryColor: "  #0ea5e9  ",
       textColor: "#f8fafc",
+      ctaLayout: "stacked",
     });
 
     expect(result.valid).toBe(true);
     expect(result.normalized).toEqual({
       primaryColor: "#0ea5e9",
       textColor: "#f8fafc",
+      ctaLayout: "stacked",
     });
   });
 
@@ -95,11 +97,13 @@ describe("validateBrandTheme", () => {
     const result = validateBrandTheme({
       primaryColor: "",
       accent: "#fff",
+      ctaLayout: "vertical",
     });
 
     expect(result.valid).toBe(false);
     expect(result.errors).toContain("theme.primaryColor must be a non-empty string when provided.");
     expect(result.errors).toContain("theme.accent is not a supported theme key.");
+    expect(result.errors).toContain("theme.ctaLayout must be one of: inline, stacked.");
   });
 });
 

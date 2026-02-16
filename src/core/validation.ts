@@ -4,6 +4,7 @@ import type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "./type
 
 const LINK_TARGETS = new Set<NonNullable<BrandNavLink["target"]>>(["_blank", "_self", "_parent", "_top"]);
 const CTA_VARIANTS = new Set<NonNullable<BrandAction["variant"]>>(["primary", "secondary", "ghost"]);
+const CTA_LAYOUTS = new Set<NonNullable<BrandTheme["ctaLayout"]>>(["inline", "stacked"]);
 const THEME_KEYS = new Set<keyof BrandTheme>([
   "primaryColor",
   "backgroundColor",
@@ -12,6 +13,7 @@ const THEME_KEYS = new Set<keyof BrandTheme>([
   "linkColor",
   "socialIconSize",
   "buttonTextColor",
+  "ctaLayout",
 ]);
 
 type ValidationErrorPath = string;
@@ -106,6 +108,10 @@ export function validateBrandTheme(theme: unknown): BrandValidationResult<BrandT
       errors.push(`theme.${key} is not a supported theme key.`);
       continue;
     }
+    if (key === "ctaLayout") {
+      validateCtaLayout(theme[key], "theme.ctaLayout", errors);
+      continue;
+    }
     validateOptionalString(theme[key], `theme.${key}`, errors);
   }
 
@@ -140,10 +146,18 @@ export function normalizeBrandTheme(theme?: BrandTheme | null): BrandTheme | nul
   const normalized: BrandTheme = {};
   for (const key of THEME_KEYS) {
     const value = theme[key];
-    if (typeof value !== "string") continue;
-    const trimmed = value.trim();
-    if (trimmed.length > 0) {
-      normalized[key] = trimmed;
+    if (key === "ctaLayout") {
+      if (typeof value === "string" && CTA_LAYOUTS.has(value as NonNullable<BrandTheme["ctaLayout"]>)) {
+        normalized[key] = value as BrandTheme["ctaLayout"];
+      }
+      continue;
+    }
+
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed.length > 0) {
+        normalized[key] = trimmed;
+      }
     }
   }
 
@@ -192,6 +206,13 @@ function validateTarget(target: unknown, path: ValidationErrorPath, errors: stri
   if (target == null) return;
   if (typeof target !== "string" || !LINK_TARGETS.has(target as NonNullable<BrandNavLink["target"]>)) {
     errors.push(`${path} must be one of: _blank, _self, _parent, _top.`);
+  }
+}
+
+function validateCtaLayout(value: unknown, path: ValidationErrorPath, errors: string[]) {
+  if (value == null) return;
+  if (typeof value !== "string" || !CTA_LAYOUTS.has(value as NonNullable<BrandTheme["ctaLayout"]>)) {
+    errors.push(`${path} must be one of: inline, stacked.`);
   }
 }
 

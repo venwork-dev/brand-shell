@@ -33,6 +33,7 @@ export function Header({ details, theme, className }: HeaderProps) {
 
   const normalizedDetails = normalizeBrandDetails(details);
   const normalizedTheme = normalizeBrandTheme(theme);
+  const ctaLayout = normalizedTheme?.ctaLayout === "stacked" ? "stacked" : "inline";
   const style = themeToStyle(normalizedTheme);
   const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(normalizedDetails);
   const combinedClassName = ["brand-shell-header", className].filter(Boolean).join(" ");
@@ -49,7 +50,7 @@ export function Header({ details, theme, className }: HeaderProps) {
   );
 
   return (
-    <header className={combinedClassName} style={style} role="banner">
+    <header className={combinedClassName} data-brand-cta-layout={ctaLayout} style={style} role="banner">
       <div className="brand-shell-header__inner">
         {brandIdentity}
         <div className="brand-shell-header__actions">

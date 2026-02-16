@@ -75,4 +75,6 @@ export interface BrandTheme {
   socialIconSize?: string;
   /** Optional override for primary CTA text color */
   buttonTextColor?: string;
+  /** Mobile CTA arrangement: side-by-side (`inline`) or one-per-row (`stacked`) */
+  ctaLayout?: "inline" | "stacked";
 }

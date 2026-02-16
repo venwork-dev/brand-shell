@@ -31,6 +31,7 @@ describe("web adapter smoke", () => {
       primaryColor: "#0ea5e9",
       backgroundColor: "#0f172a",
       textColor: "#f8fafc",
+      ctaLayout: "stacked",
     };
 
     const header = document.createElement("brand-header");
@@ -41,6 +42,7 @@ describe("web adapter smoke", () => {
     const root = header.querySelector<HTMLElement>("header.brand-shell-header");
     expect(root).not.toBeNull();
     expect(root?.style.getPropertyValue("--brand-primary")).toBe("#0ea5e9");
+    expect(root?.dataset.brandCtaLayout).toBe("stacked");
     expect(root?.querySelector(".brand-shell-header__name")?.textContent).toBe("Brand Shell");
     expect(root?.querySelector(".brand-shell-header__link")?.getAttribute("href")).toBe("/docs");
     expect(root?.querySelector('.brand-shell-header__social-link[aria-label="Email"]')?.getAttribute("href")).toBe(
@@ -65,6 +67,7 @@ describe("web adapter smoke", () => {
     footer.theme = {
       backgroundColor: "#111827",
       textColor: "#f8fafc",
+      ctaLayout: "inline",
     };
     footer.shellClass = "integration-test-shell";
     document.body.append(footer);
@@ -72,6 +75,7 @@ describe("web adapter smoke", () => {
     const root = footer.querySelector<HTMLElement>("footer.brand-shell-footer.integration-test-shell");
     expect(root).not.toBeNull();
     expect(root?.style.getPropertyValue("--brand-bg")).toBe("#111827");
+    expect(root?.dataset.brandCtaLayout).toBe("inline");
     expect(root?.querySelector(".brand-shell-footer__name")?.textContent).toBe("Brand Shell");
     expect(root?.querySelector(".brand-shell-footer__tagline")?.textContent).toBe("Reusable shell");
     expect(root?.querySelector(".brand-shell-button--primary")?.getAttribute("href")).toBe("mailto:hello@example.com");

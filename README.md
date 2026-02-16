@@ -215,6 +215,7 @@ Use a Svelte action on the custom element tags:
 | `linkColor` | `string` | Optional base link color |
 | `socialIconSize` | `string` | Size of the circular social buttons (defaults to `2.5rem`) |
 | `buttonTextColor` | `string` | Optional primary CTA text color override |
+| `ctaLayout` | `"inline" \| "stacked"` | Mobile CTA layout: side-by-side (`inline`) or one-per-row (`stacked`) |
 
 ### Theming via CSS variables
 

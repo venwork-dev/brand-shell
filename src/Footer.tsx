@@ -33,12 +33,13 @@ export function Footer({ details, theme, className }: FooterProps) {
 
   const normalizedDetails = normalizeBrandDetails(details);
   const normalizedTheme = normalizeBrandTheme(theme);
+  const ctaLayout = normalizedTheme?.ctaLayout === "stacked" ? "stacked" : "inline";
   const style = themeToStyle(normalizedTheme);
   const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(normalizedDetails);
   const combinedClassName = ["brand-shell-footer", className].filter(Boolean).join(" ");
 
   return (
-    <footer className={combinedClassName} style={style} role="contentinfo">
+    <footer className={combinedClassName} data-brand-cta-layout={ctaLayout} style={style} role="contentinfo">
       <div className="brand-shell-footer__inner">
         <div className="brand-shell-footer__top">
           <div className="brand-shell-footer__brand">

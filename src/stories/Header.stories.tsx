@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import type { CSSProperties } from "react";
 
 import { Header, type HeaderProps } from "../Header";
 import type { BrandDetails } from "../types";
@@ -29,32 +30,53 @@ const sampleDetails: BrandDetails = {
   },
 };
 
-type HeaderStoryProps = HeaderProps & { socialIconSize?: string };
+type HeaderStoryProps = HeaderProps & {
+  socialIconSize?: string;
+  ctaLayout?: "inline" | "stacked";
+};
+
+const headerCanvasStyle: CSSProperties = {
+  minHeight: "100vh",
+  background:
+    "radial-gradient(circle at 14% 10%, rgba(45, 212, 191, 0.16), transparent 28%), linear-gradient(180deg, #020617 0%, #0f172a 100%)",
+};
 
 const meta = {
   title: "Brand Shell/Header",
   component: Header,
   tags: ["autodocs"],
+  parameters: {
+    layout: "fullscreen",
+  },
   args: {
     details: sampleDetails,
     theme: null,
     socialIconSize: "2.5rem",
+    ctaLayout: "inline",
   },
   argTypes: {
     socialIconSize: {
       control: { type: "text" },
       description: "CSS size for circular social buttons (e.g. 2.25rem).",
     },
+    ctaLayout: {
+      options: ["inline", "stacked"],
+      control: { type: "radio" },
+      description: "Mobile CTA layout (inline = side-by-side, stacked = full-width rows).",
+    },
   },
-  render: ({ socialIconSize, theme, ...rest }) => (
-    <Header
-      {...rest}
-      theme={{
-        ...(theme ?? {}),
-        socialIconSize,
-      }}
-    />
-  ),
+  render: ({ socialIconSize, ctaLayout, theme, ...rest }) => {
+    const mergedTheme = {
+      ...(theme ?? {}),
+      socialIconSize,
+      ctaLayout,
+    };
+    return (
+      <div style={headerCanvasStyle}>
+        <Header {...rest} theme={mergedTheme} />
+      </div>
+    );
+  },
 } satisfies Meta<HeaderStoryProps>;
 
 export default meta;
@@ -80,6 +102,30 @@ export const MinimalDetails: Story = {
   args: {
     details: {
       name: "Minimal Brand",
+    },
+  },
+};
+
+export const MobilePreview: Story = {
+  args: {
+    socialIconSize: "2.2rem",
+    ctaLayout: "inline",
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: "iphonexr",
+    },
+  },
+};
+
+export const MobileStackedCtas: Story = {
+  args: {
+    socialIconSize: "2.2rem",
+    ctaLayout: "stacked",
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: "iphonexr",
     },
   },
 };

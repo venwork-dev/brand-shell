@@ -128,3 +128,21 @@ export const LightTheme: Story = {
     </div>
   ),
 };
+
+export const MobileLayout: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: "iphonexr",
+    },
+  },
+  render: () => (
+    <div style={shellRootStyle}>
+      <Header details={fullDetails} theme={{ socialIconSize: "2.2rem", ctaLayout: "inline" }} />
+      <main style={{ ...shellMainStyle, padding: "1rem 0.9rem" }}>
+        <h1 style={shellHeadingStyle}>Mobile shell flow</h1>
+        <p style={shellParagraphStyle}>Header and footer stay compact without losing navigation, actions, or social links.</p>
+      </main>
+      <Footer details={fullDetails} theme={{ socialIconSize: "2.2rem", ctaLayout: "inline" }} />
+    </div>
+  ),
+};

@@ -254,6 +254,7 @@ function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClas
   header.className = joinClassNames("brand-shell-header", shellClass);
   header.setAttribute("role", "banner");
   applyThemeVariables(header, theme);
+  header.dataset.brandCtaLayout = resolveCtaLayout(theme);
 
   const inner = document.createElement("div");
   inner.className = "brand-shell-header__inner";
@@ -291,6 +292,7 @@ function createFooter(details: BrandDetails, theme: BrandTheme | null, shellClas
   footer.className = joinClassNames("brand-shell-footer", shellClass);
   footer.setAttribute("role", "contentinfo");
   applyThemeVariables(footer, theme);
+  footer.dataset.brandCtaLayout = resolveCtaLayout(theme);
 
   const inner = document.createElement("div");
   inner.className = "brand-shell-footer__inner";
@@ -471,6 +473,10 @@ function applyThemeVariables(element: HTMLElement, theme: BrandTheme | null) {
   for (const [name, value] of Object.entries(style)) {
     element.style.setProperty(name, value);
   }
+}
+
+function resolveCtaLayout(theme: BrandTheme | null): "inline" | "stacked" {
+  return theme?.ctaLayout === "stacked" ? "stacked" : "inline";
 }
 
 function joinClassNames(...classNames: Array<string | null | undefined>) {
