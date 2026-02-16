@@ -59,8 +59,12 @@
     "test:smoke": "vitest run --config vitest.smoke.config.ts",
     "typecheck": "tsc -p tsconfig.check.json --noEmit",
     "lint": "bun run typecheck",
+    "commitlint": "commitlint --config .commitlintrc.cjs --verbose",
     "pack:check": "node scripts/check-pack.cjs",
     "check": "bun run lint && bun run test && bun run build && bun run pack:check",
+    "changeset": "bunx @changesets/cli@2.29.7",
+    "version:packages": "bun run changeset version",
+    "release:publish": "bun run changeset publish --provenance",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "postbuild": "node scripts/copy-css.cjs"
@@ -82,6 +86,8 @@
     }
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "ajv": "^8.17.1",
     "@types/node": "^22.10.7",
     "@types/react": "^18.3.12",
