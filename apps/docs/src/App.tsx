@@ -137,6 +137,8 @@ const SECURITY_GUARDS = [
   },
 ];
 
+const CHROMATIC_STORYBOOK_URL = "https://6992723e39539a58d711f188-ceiwmlxyrh.chromatic.com/";
+
 const DOCS_SHELL_DETAILS: BrandDetails = {
   name: "Brand Shell",
   homeHref: "#top",
@@ -146,7 +148,7 @@ const DOCS_SHELL_DETAILS: BrandDetails = {
     { label: "Security", href: "#security" },
     { label: "Playground", href: "#playground" },
   ],
-  primaryAction: { label: "Try Live Preview", href: "#preview" },
+  primaryAction: { label: "Open Storybook", href: CHROMATIC_STORYBOOK_URL, target: "_blank" },
   tagline: "Build once. Reuse everywhere with one validated shell contract.",
 };
 
@@ -279,6 +281,17 @@ export default function App() {
             Svelte, and Web Components.
             Test payloads here before integrating with customer apps.
           </p>
+          <div className="hero__actions">
+            <a
+              className="hero__primary-link"
+              href={CHROMATIC_STORYBOOK_URL}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Open Storybook on Chromatic
+            </a>
+            <span className="hero__meta">Latest hosted UI review link for component QA and approvals.</span>
+          </div>
         </header>
         <nav className="section-shortcuts" aria-label="Section shortcuts">
           {SECTION_SHORTCUTS.map((shortcut) => (
