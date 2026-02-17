@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.4.0
+
+### Minor Changes
+
+- 04f08f0: Refresh npm-facing docs by simplifying README, adding CONTRIBUTING guidance, and improving the docs webapp install quickstart.
+
 ## 0.3.0
 
 ### Minor Changes

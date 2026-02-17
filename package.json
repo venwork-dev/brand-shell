@@ -1,6 +1,6 @@
 {
   "name": "brand-shell",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Reusable Header and Footer components with typed details and theme. Premium default UX, works in React, Vite, Next.js.",
   "type": "module",
   "main": "./dist/index.mjs",
