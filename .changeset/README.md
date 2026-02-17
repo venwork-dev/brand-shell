@@ -14,4 +14,4 @@ Choose the bump type:
 - `minor` for backward-compatible features
 - `major` for breaking contract/API changes
 
-Docs-only changes do not need a changeset.
+This repo enforces one changeset per PR (minimum `patch`).

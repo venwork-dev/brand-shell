@@ -9,6 +9,8 @@ const BUMP_RANK = {
   major: 3,
 };
 
+const MIN_REQUIRED_RANK = BUMP_RANK.patch;
+
 const [from, to] = process.argv.slice(2);
 
 if (!from || !to) {
@@ -54,9 +56,9 @@ for (const entry of commits) {
   }
 }
 
-if (requiredRank === BUMP_RANK.none) {
-  console.log("No feat/fix/perf/refactor/breaking commit intent detected; no bump enforcement required.");
-  process.exit(0);
+if (requiredRank < MIN_REQUIRED_RANK) {
+  requiredRank = MIN_REQUIRED_RANK;
+  requiredReason = "all PRs require at least a patch changeset";
 }
 
 const changedFiles = execSync(`git diff --name-only ${from}..${to}`, {
@@ -99,6 +101,13 @@ for (const file of changesetFilesForBump) {
     actualRank = rank;
     actualLabel = bump;
   }
+}
+
+if (actualRank === BUMP_RANK.none) {
+  console.error(
+    "Changeset files were found, but none declared a bump for \"brand-shell\". Use patch/minor/major in frontmatter.",
+  );
+  process.exit(1);
 }
 
 if (actualRank < requiredRank) {

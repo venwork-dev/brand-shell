@@ -289,8 +289,7 @@ bun run docs:build
 
 This repo uses Changesets for controlled SemVer bumps.
 
-- `docs-only` changes: no package version bump needed
-- package changes: add a changeset in the PR
+- every PR must include a changeset (minimum `patch`)
 
 ```bash
 bun run changeset
@@ -305,6 +304,7 @@ Bump policy:
 Commit enforcement:
 
 - PR commits must follow Conventional Commits (checked by `.github/workflows/commit-policy.yml`)
+- every PR must include a `.changeset/*.md` bump entry for `brand-shell` (`patch`/`minor`/`major`)
 - bump intent is auto-checked from commits:
   - `feat` => at least `minor`
   - `fix` / `perf` / `refactor` => at least `patch`
