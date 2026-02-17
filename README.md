@@ -303,14 +303,14 @@ Bump policy:
 
 Commit enforcement:
 
-- PR commits must follow Conventional Commits (checked by `.github/workflows/commit-policy.yml`)
+- PR commits must follow Conventional Commits (checked by `.github/workflows/ci.yml`)
 - every PR must include a `.changeset/*.md` bump entry for `brand-shell` (`patch`/`minor`/`major`)
 - bump intent is auto-checked from commits:
   - `feat` => at least `minor`
   - `fix` / `perf` / `refactor` => at least `patch`
   - `!` or `BREAKING CHANGE:` => `major`
 
-Release automation lives in `.github/workflows/release.yml` and runs after CI succeeds on `main`:
+Release automation runs in `.github/workflows/release.yml`, which calls the same reusable verification workflow as CI before running Changesets publish steps:
 
 - if pending changesets exist, it opens/updates a release PR
 - once that release PR is merged, it publishes to npm with provenance
