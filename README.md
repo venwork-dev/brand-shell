@@ -303,7 +303,7 @@ Bump policy:
 
 Commit enforcement:
 
-- PR commits must follow Conventional Commits (checked by `.github/workflows/commit-policy.yml`)
+- PR commits must follow Conventional Commits (checked by `.github/workflows/ci.yml`)
 - every PR must include a `.changeset/*.md` bump entry for `brand-shell` (`patch`/`minor`/`major`)
 - bump intent is auto-checked from commits:
   - `feat` => at least `minor`
