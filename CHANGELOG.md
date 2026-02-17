@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.3.0
+
+### Minor Changes
+
+- 6be1ffe: resubmit release version
+
 ## 0.2.0
 
 ### Minor Changes
