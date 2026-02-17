@@ -26,6 +26,9 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout
@@ -48,14 +51,22 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Verify npm token
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ -z "${NPM_TOKEN}" ]; then
             echo "NPM_TOKEN is not configured."
             echo "Add it in GitHub repository settings > Secrets and variables > Actions."
             exit 1
           fi
+          if [[ "${NPM_TOKEN}" != npm_* ]]; then
+            echo "NPM_TOKEN format looks invalid. It should start with npm_."
+            exit 1
+          fi
+
+      - name: Verify npm auth identity
+        run: |
+          npm --version
+          npm config get registry
+          npm whoami
 
       - name: Create release PR or publish
         uses: changesets/action@v1
@@ -67,3 +78,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
