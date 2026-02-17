@@ -133,6 +133,32 @@ body {
   outline-offset: 3px;
 }
 
+.hero__secondary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(15, 23, 42, 0.5);
+  color: #dbeafe;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  padding: 0.52rem 1.02rem;
+}
+
+.hero__secondary-link:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.hero__secondary-link:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 3px;
+}
+
 .hero__meta {
   color: #9dd9d0;
   font-size: 0.84rem;
@@ -195,11 +221,29 @@ body {
 }
 
 #how-it-works,
+#install,
 #quickstart,
 #security,
 #playground,
 #preview {
   scroll-margin-top: 1rem;
+}
+
+.panel__intro,
+.panel__meta {
+  margin: 0 0 0.75rem;
+  color: #bfd4e8;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.panel__meta {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+}
+
+.panel__meta a {
+  color: #99f6e4;
 }
 
 .work-grid {
@@ -458,6 +502,7 @@ body {
   }
 
   #how-it-works,
+  #install,
   #quickstart,
   #security,
   #playground,
@@ -523,6 +568,10 @@ body {
   }
 
   .hero__primary-link {
+    width: 100%;
+  }
+
+  .hero__secondary-link {
     width: 100%;
   }
 

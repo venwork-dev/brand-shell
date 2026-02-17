@@ -14,6 +14,7 @@ import schema from "brand-shell/schema";
 import "brand-shell/default.css";
 
 type Framework = "react" | "next" | "tanstack" | "vue" | "svelte" | "web";
+type PackageManager = "bun" | "npm" | "pnpm" | "yarn";
 
 const DEFAULT_DETAILS: BrandDetails = {
   name: "Brand Shell",
@@ -103,6 +104,20 @@ applyBrandShellProps(headerElement, { details, theme });
 applyBrandShellProps(footerElement, { details, theme });`,
 };
 
+const PACKAGE_MANAGER_ORDER: PackageManager[] = ["bun", "npm", "pnpm", "yarn"];
+const PACKAGE_MANAGER_LABELS: Record<PackageManager, string> = {
+  bun: "Bun",
+  npm: "npm",
+  pnpm: "pnpm",
+  yarn: "Yarn",
+};
+const INSTALL_SNIPPETS: Record<PackageManager, string> = {
+  bun: `bun add brand-shell`,
+  npm: `npm install brand-shell`,
+  pnpm: `pnpm add brand-shell`,
+  yarn: `yarn add brand-shell`,
+};
+
 const HOW_IT_WORKS = [
   {
     title: "Single Contract",
@@ -138,12 +153,13 @@ const SECURITY_GUARDS = [
 ];
 
 const CHROMATIC_STORYBOOK_URL = "https://6992723e39539a58d711f188-ceiwmlxyrh.chromatic.com/";
+const NPM_PACKAGE_URL = "https://www.npmjs.com/package/brand-shell";
 
 const DOCS_SHELL_DETAILS: BrandDetails = {
   name: "Brand Shell",
   homeHref: "#top",
   navLinks: [
-    { label: "How it works", href: "#how-it-works" },
+    { label: "Install", href: "#install" },
     { label: "Frameworks", href: "#quickstart" },
     { label: "Security", href: "#security" },
     { label: "Playground", href: "#playground" },
@@ -161,6 +177,7 @@ const DOCS_SHELL_THEME: BrandTheme = {
 };
 
 const SECTION_SHORTCUTS = [
+  { label: "Install", href: "#install" },
   { label: "How", href: "#how-it-works" },
   { label: "Frameworks", href: "#quickstart" },
   { label: "Security", href: "#security" },
@@ -215,6 +232,7 @@ export default function App() {
   const [detailsText, setDetailsText] = useState(DEFAULT_DETAILS_TEXT);
   const [themeText, setThemeText] = useState(DEFAULT_THEME_TEXT);
   const [activeFramework, setActiveFramework] = useState<Framework>("react");
+  const [activePackageManager, setActivePackageManager] = useState<PackageManager>("bun");
 
   const schemaValidator = useMemo(() => {
     const ajv = new Ajv2020({
@@ -290,6 +308,9 @@ export default function App() {
             >
               Open Storybook on Chromatic
             </a>
+            <a className="hero__secondary-link" href={NPM_PACKAGE_URL} rel="noopener noreferrer" target="_blank">
+              View package on npm
+            </a>
             <span className="hero__meta">Latest hosted UI review link for component QA and approvals.</span>
           </div>
         </header>
@@ -312,6 +333,34 @@ export default function App() {
                 </article>
               ))}
             </div>
+          </section>
+
+          <section className="panel panel--install" id="install">
+            <h2>Install from npm</h2>
+            <p className="panel__intro">
+              Pick your package manager, install once, then import Brand Shell components and stylesheet in your app.
+            </p>
+            <div className="framework-tabs framework-tabs--install">
+              {PACKAGE_MANAGER_ORDER.map((manager) => (
+                <button
+                  key={manager}
+                  className={manager === activePackageManager ? "tab tab--active" : "tab"}
+                  onClick={() => setActivePackageManager(manager)}
+                  type="button"
+                >
+                  {PACKAGE_MANAGER_LABELS[manager]}
+                </button>
+              ))}
+            </div>
+            <pre className="code-block">
+              <code>{INSTALL_SNIPPETS[activePackageManager]}</code>
+            </pre>
+            <p className="panel__meta">
+              Package:{" "}
+              <a href={NPM_PACKAGE_URL} rel="noopener noreferrer" target="_blank">
+                brand-shell
+              </a>
+            </p>
           </section>
 
           <section className="panel" id="quickstart">
