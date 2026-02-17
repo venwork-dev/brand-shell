@@ -310,7 +310,7 @@ Commit enforcement:
   - `fix` / `perf` / `refactor` => at least `patch`
   - `!` or `BREAKING CHANGE:` => `major`
 
-Release automation lives in `.github/workflows/release.yml` and runs after CI succeeds on `main`:
+Release automation runs in `.github/workflows/release.yml`, which calls the same reusable verification workflow as CI before running Changesets publish steps:
 
 - if pending changesets exist, it opens/updates a release PR
 - once that release PR is merged, it publishes to npm with provenance
