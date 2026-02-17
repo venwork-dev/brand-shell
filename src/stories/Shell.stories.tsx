@@ -176,9 +176,12 @@ export const LightTheme: Story = {
 };
 
 export const MobileLayout: Story = {
+  globals: {
+    viewport: { value: "mobile2", isRotated: false },
+  },
   parameters: {
     viewport: {
-      defaultViewport: "iphonexr",
+      defaultViewport: "mobile2",
     },
   },
   render: () => (

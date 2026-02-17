@@ -40,7 +40,7 @@
   --_space: var(--brand-space-md);
 
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
   font-family: var(--_font);
   background:
@@ -349,8 +349,14 @@
     flex-wrap: nowrap;
     gap: 0.36rem;
     margin-top: 0.12rem;
-    padding-bottom: 0.12rem;
+    padding-block: 0.08rem 0.12rem;
     overflow-x: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand-shell-header__social-link:hover {
+    transform: none;
   }
 }
 

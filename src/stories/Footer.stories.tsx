@@ -120,9 +120,12 @@ export const MobilePreview: Story = {
     socialIconSize: "2.2rem",
     ctaLayout: "inline",
   },
+  globals: {
+    viewport: { value: "mobile2", isRotated: false },
+  },
   parameters: {
     viewport: {
-      defaultViewport: "iphonexr",
+      defaultViewport: "mobile2",
     },
   },
 };
@@ -132,9 +135,12 @@ export const MobileStackedCtas: Story = {
     socialIconSize: "2.2rem",
     ctaLayout: "stacked",
   },
+  globals: {
+    viewport: { value: "mobile2", isRotated: false },
+  },
   parameters: {
     viewport: {
-      defaultViewport: "iphonexr",
+      defaultViewport: "mobile2",
     },
   },
 };
