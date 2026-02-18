@@ -86,4 +86,4 @@ import schema from "brand-shell/schema";
 
 SemVer is managed with Changesets.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development, commit policy, and release flow.
+See [CONTRIBUTING.md](https://github.com/venwork-dev/brand-shell/blob/main/CONTRIBUTING.md) for development, commit policy, and release flow.
