@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.5.0
+
+### Minor Changes
+
+- 02d7d5e: Switch npm release workflow to Trusted Publishing (OIDC) by removing token-based npm auth from GitHub Actions release job.
+
 ## 0.4.0
 
 ### Minor Changes
