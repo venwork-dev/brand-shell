@@ -69,9 +69,10 @@ Release is automated through GitHub Actions.
 
 ## NPM Publish Notes
 
-- Use repository secret `NPM_TOKEN`.
-- Token must support publish and bypass 2FA for automation.
-- Release workflow verifies `npm whoami` before publish.
+- Publish uses npm Trusted Publishing (OIDC) from GitHub Actions.
+- Keep `id-token: write` permission in `/Users/mounikathota/brand-shell/.github/workflows/release.yml`.
+- Configure Trusted Publisher in npm package settings for this repository/workflow.
+- Do not store long-lived `NPM_TOKEN` once Trusted Publishing is active.
 
 ## Pull Request Checklist
 
