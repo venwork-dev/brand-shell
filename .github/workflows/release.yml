@@ -152,6 +152,7 @@ jobs:
       - name: Promote dist-tag
         env:
           VERSION: ${{ steps.resolved.outputs.VERSION }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
           echo "Promoting brand-shell@${VERSION} -> latest"
