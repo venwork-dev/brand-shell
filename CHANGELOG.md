@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.6.0
+
+### Minor Changes
+
+- 269584e: Add two-stage npm release automation: publish to dist-tag next, validate via a starter app canary, then promote to latest.
+
 ## 0.5.0
 
 ### Minor Changes
