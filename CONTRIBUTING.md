@@ -59,15 +59,14 @@ Release is automated through GitHub Actions.
 1. Merge feature PRs into `main`.
 2. Release workflow creates/updates a bot release PR with version bumps.
 3. Merge the release PR.
-4. Release workflow publishes to npm with dist-tag `next`.
-5. Canary validates the published `next` version using `starters/react-npm`.
-6. Promote the validated version to `latest` using the `Promote npm dist-tag (latest)` workflow.
+4. The release PR runs a pack + starter canary gate (see below).
+5. Once the release PR is merged, the release workflow publishes to npm (`latest`) via Trusted Publishing.
 
 ## CI Workflows
 
 - `.github/workflows/ci.yml`: PR checks (commit policy, reusable verify, conditional Chromatic)
 - `.github/workflows/verify.yml`: reusable quality/docs/consumer matrix gate
-- `.github/workflows/release.yml`: publish to dist-tag `next`, run starter canary, and optionally promote to `latest`
+- `.github/workflows/release.yml`: main-branch release PR + npm publish
 
 ## NPM Publish Notes
 
@@ -78,7 +77,14 @@ Release is automated through GitHub Actions.
 
 ## Starter Canary
 
-The `starters/react-npm` app is intentionally a "real npm consumer" (no local `dist` aliases). The release workflow pins it to the exact published version and runs `bun run build` before promoting.
+The `starters/react-npm` app is intentionally a "real npm consumer" (no local `dist` aliases).
+
+Release PRs run a deterministic canary in CI:
+
+- build library
+- `npm pack` the exact publish artifact
+- install the tarball into `starters/react-npm`
+- run `bun run build` in the starter
 
 ## Pull Request Checklist
 
