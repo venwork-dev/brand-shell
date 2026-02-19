@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.7.0
+
+### Minor Changes
+
+- a817136: user npm token for publish
+
 ## 0.6.0
 
 ### Minor Changes
