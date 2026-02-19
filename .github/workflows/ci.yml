@@ -80,11 +80,11 @@ jobs:
           tarball="$(npm pack --silent)"
           echo "TARBALL=${tarball}" >> "$GITHUB_OUTPUT"
 
-      - name: Install starter dependencies
-        run: bun install --cwd starters/react-npm
-
       - name: Install tarball into starter
         run: bun add ./${{ steps.pack.outputs.TARBALL }} --cwd starters/react-npm --exact
+
+      - name: Install starter dependencies
+        run: bun install --cwd starters/react-npm --frozen-lockfile
 
       - name: Build starter
         run: bun run --cwd starters/react-npm build
