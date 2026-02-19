@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.8.0
+
+### Minor Changes
+
+- cf46336: Replace dist-tag promotion with a deterministic release PR gate that packs the publish artifact and builds the starter app before publishing.
+
 ## 0.7.0
 
 ### Minor Changes
