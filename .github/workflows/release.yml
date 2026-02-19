@@ -5,11 +5,25 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "publish (default) or promote"
+        required: false
+        default: publish
+        type: choice
+        options:
+          - publish
+          - promote
+      version:
+        description: 'When mode=promote: version to promote to "latest" (blank = use current "next" dist-tag)'
+        required: false
+        type: string
 
 jobs:
   verify:
     uses: ./.github/workflows/verify.yml
     secrets: inherit
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.mode == '' || inputs.mode == 'publish' }}
 
   release:
     name: Version & Publish
@@ -17,15 +31,19 @@ jobs:
     needs:
       - verify
     if: >-
-      github.event_name == 'push' ||
+      (github.event_name == 'push') ||
       (
         github.event_name == 'workflow_dispatch' &&
-        github.ref == 'refs/heads/main'
+        github.ref == 'refs/heads/main' &&
+        (inputs.mode == '' || inputs.mode == 'publish')
       )
     permissions:
       contents: write
       pull-requests: write
       id-token: write
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
 
     steps:
       - name: Checkout
@@ -47,12 +65,97 @@ jobs:
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Create release PR or publish
+      - name: "Create release PR or publish (tag: next)"
+        id: changesets
         uses: changesets/action@v1
         with:
           version: bun run version:packages
-          publish: bun run release:publish
+          publish: bun run release:publish:next
           title: "chore(release): version packages"
           commit: "chore(release): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  starter-canary:
+    name: "Starter Canary (npm tag: next)"
+    runs-on: ubuntu-latest
+    needs:
+      - release
+    if: ${{ needs.release.outputs.published == 'true' }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24.13.0
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3
+        with:
+          bun-version: 1.3.6
+
+      - name: Resolve published version
+        id: published
+        env:
+          PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
+        run: |
+          set -euo pipefail
+          node -e 'const raw=process.env.PUBLISHED_PACKAGES||"[]"; const list=JSON.parse(raw); const hit=list.find(p=>p.name==="brand-shell"); if(!hit) process.exit(2); process.stdout.write(`VERSION=${hit.version}\n`);' >> "$GITHUB_OUTPUT"
+
+      - name: Install starter dependencies
+        run: bun install --cwd starters/react-npm
+
+      - name: Pin brand-shell to published version
+        run: bun add brand-shell@${{ steps.published.outputs.VERSION }} --cwd starters/react-npm --exact
+
+      - name: Build starter
+        run: bun run --cwd starters/react-npm build
+
+  promote-latest:
+    name: Promote npm dist-tag (latest)
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/main' &&
+      inputs.mode == 'promote'
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24.13.0
+          registry-url: https://registry.npmjs.org
+
+      - name: Resolve version
+        id: resolved
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ -n "${INPUT_VERSION}" ]; then
+            echo "VERSION=${INPUT_VERSION}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node -e 'const { execSync } = require("node:child_process"); const raw=execSync("npm view brand-shell dist-tags --json",{encoding:"utf8"}); const tags=JSON.parse(raw); if(!tags.next) { console.error("No dist-tag: next"); process.exit(2);} process.stdout.write(`VERSION=${tags.next}\n`);' >> "$GITHUB_OUTPUT"
+
+      - name: Show current dist-tags
+        run: npm view brand-shell dist-tags
+
+      - name: Promote dist-tag
+        env:
+          VERSION: ${{ steps.resolved.outputs.VERSION }}
+        run: |
+          set -euo pipefail
+          echo "Promoting brand-shell@${VERSION} -> latest"
+          npm dist-tag add "brand-shell@${VERSION}" latest
+
+      - name: Show updated dist-tags
+        run: npm view brand-shell dist-tags

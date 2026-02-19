@@ -59,20 +59,26 @@ Release is automated through GitHub Actions.
 1. Merge feature PRs into `main`.
 2. Release workflow creates/updates a bot release PR with version bumps.
 3. Merge the release PR.
-4. Release workflow publishes to npm.
+4. Release workflow publishes to npm with dist-tag `next`.
+5. Canary validates the published `next` version using `starters/react-npm`.
+6. Promote the validated version to `latest` using the `Promote npm dist-tag (latest)` workflow.
 
 ## CI Workflows
 
-- `/Users/mounikathota/brand-shell/.github/workflows/ci.yml`: PR checks (commit policy, reusable verify, conditional Chromatic)
-- `/Users/mounikathota/brand-shell/.github/workflows/verify.yml`: reusable quality/docs/consumer matrix gate
-- `/Users/mounikathota/brand-shell/.github/workflows/release.yml`: main-branch release PR + npm publish
+- `.github/workflows/ci.yml`: PR checks (commit policy, reusable verify, conditional Chromatic)
+- `.github/workflows/verify.yml`: reusable quality/docs/consumer matrix gate
+- `.github/workflows/release.yml`: publish to dist-tag `next`, run starter canary, and optionally promote to `latest`
 
 ## NPM Publish Notes
 
 - Publish uses npm Trusted Publishing (OIDC) from GitHub Actions.
-- Keep `id-token: write` permission in `/Users/mounikathota/brand-shell/.github/workflows/release.yml`.
-- Configure Trusted Publisher in npm package settings for this repository/workflow.
+- Keep `id-token: write` permission in `.github/workflows/release.yml`.
+- Configure the Trusted Publisher in npm package settings for this repository/workflow: `release.yml`.
 - Do not store long-lived `NPM_TOKEN` once Trusted Publishing is active.
+
+## Starter Canary
+
+The `starters/react-npm` app is intentionally a "real npm consumer" (no local `dist` aliases). The release workflow pins it to the exact published version and runs `bun run build` before promoting.
 
 ## Pull Request Checklist
 

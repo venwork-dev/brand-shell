@@ -73,6 +73,7 @@
     "changeset": "bunx @changesets/cli@2.29.7",
     "version:packages": "bun run changeset version",
     "release:publish": "bun run changeset publish --provenance",
+    "release:publish:next": "bun run changeset publish --provenance --tag next",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "postbuild": "node scripts/copy-css.cjs"
