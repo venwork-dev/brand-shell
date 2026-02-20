@@ -7,6 +7,7 @@ jobs:
   conventional-commits:
     name: Conventional Commits + Bump Policy
     runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.pull_request.title, 'chore(release):') }}
 
     steps:
       - name: Checkout
@@ -41,12 +42,11 @@ jobs:
       - conventional-commits
     uses: ./.github/workflows/verify.yml
     secrets: inherit
+    if: ${{ !startsWith(github.event.pull_request.title, 'chore(release):') }}
 
   pack-starter-canary:
     name: Pack + Starter Canary (release PRs)
     runs-on: ubuntu-latest
-    needs:
-      - conventional-commits
     if: >-
       github.event_name == 'pull_request' &&
       startsWith(github.event.pull_request.title, 'chore(release):')
@@ -94,6 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - conventional-commits
+    if: ${{ !startsWith(github.event.pull_request.title, 'chore(release):') }}
     outputs:
       storybook: ${{ steps.filter.outputs.storybook }}
 
