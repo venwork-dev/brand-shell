@@ -33,7 +33,7 @@ export function App() {
       <main style={{ padding: "1rem" }}>
         <h1 style={{ margin: 0, fontSize: "1.25rem" }}>Starter smoke</h1>
         <p style={{ marginTop: "0.5rem" }}>
-          This app exists to validate the published package (tagged <code>next</code>) before promoting to <code>latest</code>.
+          This app validates the published npm artifact through the React adapter.
         </p>
       </main>
       <Footer details={details} theme={theme} />

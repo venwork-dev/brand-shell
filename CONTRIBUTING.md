@@ -77,14 +77,18 @@ Release is automated through GitHub Actions.
 
 ## Starter Canary
 
-The `starters/react-npm` app is intentionally a "real npm consumer" (no local `dist` aliases).
+The starter apps are intentionally "real npm consumers" (no local `dist` aliases):
 
-Release PRs run a deterministic canary in CI:
+- `starters/react-npm`
+- `starters/vue-npm`
+- `starters/svelte-npm`
+
+Release PRs run a best-effort starter canary smoke in CI:
 
 - build library
 - `npm pack` the exact publish artifact
-- install the tarball into `starters/react-npm`
-- run `bun run build` in the starter
+- install the tarball into each starter
+- run `bun run build` for each starter
 
 ## Pull Request Checklist
 

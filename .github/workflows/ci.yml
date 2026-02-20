@@ -45,11 +45,21 @@ jobs:
     if: ${{ !startsWith(github.event.pull_request.title, 'chore(release):') }}
 
   pack-starter-canary:
-    name: Pack + Starter Canary (release PRs)
+    name: Pack + Starter Canary (${{ matrix.starter.name }})
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'pull_request' &&
       startsWith(github.event.pull_request.title, 'chore(release):')
+    strategy:
+      fail-fast: false
+      matrix:
+        starter:
+          - name: react
+            path: starters/react-npm
+          - name: vue
+            path: starters/vue-npm
+          - name: svelte
+            path: starters/svelte-npm
 
     steps:
       - name: Checkout
@@ -81,13 +91,13 @@ jobs:
           echo "TARBALL=${tarball}" >> "$GITHUB_OUTPUT"
 
       - name: Install tarball into starter
-        run: bun add ./${{ steps.pack.outputs.TARBALL }} --cwd starters/react-npm --exact
+        run: bun add ./${{ steps.pack.outputs.TARBALL }} --cwd ${{ matrix.starter.path }} --exact
 
       - name: Install starter dependencies
-        run: bun install --cwd starters/react-npm --frozen-lockfile
+        run: bun install --cwd ${{ matrix.starter.path }}
 
       - name: Build starter
-        run: bun run --cwd starters/react-npm build
+        run: bun run --cwd ${{ matrix.starter.path }} build
 
   storybook-changes:
     name: Detect Storybook Changes
