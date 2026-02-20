@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.9.0
+
+### Minor Changes
+
+- 8bac0ad: change the order of tarball installation and build
+
 ## 0.8.0
 
 ### Minor Changes
