@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.11.0
+
+### Minor Changes
+
+- 07864c4: Expand release PR pack canary coverage to React, Vue, and Svelte npm starter apps.
+
 ## 0.10.0
 
 ### Minor Changes
