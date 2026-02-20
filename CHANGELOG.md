@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.10.0
+
+### Minor Changes
+
+- d2a9b0b: Reduce release cycle time by skipping full CI verification on Changesets-generated release PRs and relying on a targeted pack+starter canary gate.
+
 ## 0.9.0
 
 ### Minor Changes
