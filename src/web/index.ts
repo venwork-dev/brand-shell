@@ -19,6 +19,7 @@ import {
 } from "../core";
 
 export type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "../core";
+export { validateBrandDetails, validateBrandTheme } from "../core";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 

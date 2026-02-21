@@ -71,7 +71,7 @@ jobs:
         run: bun install --frozen-lockfile && bun run build
 
       - name: Pack
-        run: bun pack
+        run: bun pm pack
 
       - name: Install react-npm starter
         run: bun install --cwd starters/react-npm

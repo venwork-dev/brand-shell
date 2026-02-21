@@ -5,6 +5,7 @@ import { assertValidBrandDetails, assertValidBrandTheme, shouldValidateInDev } f
 import { applyBrandShellProps, registerBrandShellElements, type BrandShellElementLike, type LinkFactoryOptions } from "../web";
 
 export type { BrandDetails, BrandTheme } from "../core";
+export { validateBrandDetails, validateBrandTheme } from "../core";
 export type { LinkFactoryOptions } from "../web";
 
 export interface BrandShellVueProps {
