@@ -1,6 +1,6 @@
 {
   "name": "brand-shell",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Reusable Header and Footer components with typed details and theme. Premium default UX, works in React, Vite, Next.js.",
   "homepage": "https://github.com/venwork-dev/brand-shell#readme",
   "repository": {
