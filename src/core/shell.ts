@@ -1,5 +1,5 @@
 import { detailsToSocialLinks, type SocialLink } from "./social";
-import type { BrandAction, BrandDetails, BrandNavLink } from "./types";
+import type { BrandAction, BrandDetails, BrandNavLink, CustomSocialLink } from "./types";
 import { normalizeRel, normalizeSafeHref } from "./links";
 
 export type LinkTarget = NonNullable<BrandNavLink["target"]>;
@@ -54,7 +54,7 @@ export function normalizeBrandDetails(details: BrandDetails): NormalizedBrandDet
   return {
     ...details,
     homeHref: normalizeSafeHref(details.homeHref),
-    gmail: normalizeGmailHref(details.gmail),
+    email: normalizeEmailHref(details.email),
     website: normalizeSafeHref(details.website),
     linkedin: normalizeSafeHref(details.linkedin),
     github: normalizeSafeHref(details.github),
@@ -63,6 +63,7 @@ export function normalizeBrandDetails(details: BrandDetails): NormalizedBrandDet
     navLinks: normalizeNavLinks(details.navLinks),
     primaryAction: normalizedPrimaryAction,
     secondaryAction: normalizedSecondaryAction,
+    customSocialLinks: normalizeCustomSocialLinks(details.customSocialLinks),
   };
 }
 
@@ -87,19 +88,21 @@ export function normalizeCtaLinks(
   });
 }
 
-export function buildShellViewModel(details: BrandDetails): ShellViewModel {
-  const normalizedDetails = normalizeBrandDetails(details);
-
+export function buildShellViewModelFromNormalized(normalized: NormalizedBrandDetails): ShellViewModel {
   return {
-    navLinks: normalizedDetails.navLinks,
-    ctaLinks: normalizeCtaLinks(normalizedDetails.primaryAction, normalizedDetails.secondaryAction),
-    socialLinks: detailsToSocialLinks(normalizedDetails),
+    navLinks: normalized.navLinks,
+    ctaLinks: normalizeCtaLinks(normalized.primaryAction, normalized.secondaryAction),
+    socialLinks: detailsToSocialLinks(normalized),
   };
 }
 
-export function normalizeGmailHref(gmail?: string): string | undefined {
-  if (typeof gmail !== "string") return undefined;
-  const trimmed = gmail.trim();
+export function buildShellViewModel(details: BrandDetails): ShellViewModel {
+  return buildShellViewModelFromNormalized(normalizeBrandDetails(details));
+}
+
+export function normalizeEmailHref(email?: string): string | undefined {
+  if (typeof email !== "string") return undefined;
+  const trimmed = email.trim();
   if (trimmed.length === 0) return undefined;
   if (trimmed.toLowerCase().startsWith("mailto:")) {
     const address = trimmed.slice(7).trim();
@@ -107,6 +110,17 @@ export function normalizeGmailHref(gmail?: string): string | undefined {
     return normalizeSafeHref(`mailto:${address}`);
   }
   return normalizeSafeHref(`mailto:${trimmed}`);
+}
+
+function normalizeCustomSocialLinks(links?: CustomSocialLink[]): CustomSocialLink[] | undefined {
+  if (!links || links.length === 0) return undefined;
+  const normalized: CustomSocialLink[] = [];
+  for (const link of links) {
+    const href = normalizeSafeHref(link.href);
+    if (!href) continue;
+    normalized.push({ ...link, href });
+  }
+  return normalized.length > 0 ? normalized : undefined;
 }
 
 function normalizeAction(action?: BrandAction): NormalizedActionLink | undefined {

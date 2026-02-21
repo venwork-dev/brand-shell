@@ -30,16 +30,26 @@ export interface RegisterBrandShellElementsOptions {
   footerTagName?: string;
 }
 
+export interface LinkFactoryOptions {
+  href: string;
+  className: string;
+  ariaLabel: string;
+  target: string;
+  rel?: string;
+}
+
 export interface BrandShellElementProps {
   details: BrandDetails;
   theme?: BrandTheme | null;
   shellClass?: string | null;
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement;
 }
 
 export type BrandShellElementLike = HTMLElement & {
   details?: BrandDetails | null;
   theme?: BrandTheme | null;
   shellClass?: string | null;
+  linkFactory?: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null;
 };
 
 export interface SerializedBrandShellAttributes {
@@ -62,6 +72,7 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
   private _details: BrandDetails | null = null;
   private _theme: BrandTheme | null = null;
   private _shellClass: string | null = null;
+  private _linkFactory: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null = null;
 
   get details(): BrandDetails | null {
     return this._details;
@@ -90,10 +101,20 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
     this.render();
   }
 
+  get linkFactory(): ((options: LinkFactoryOptions) => HTMLAnchorElement) | null {
+    return this._linkFactory;
+  }
+
+  set linkFactory(value: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null) {
+    this._linkFactory = value;
+    this.render();
+  }
+
   connectedCallback() {
     this.upgradeProperty("details");
     this.upgradeProperty("theme");
     this.upgradeProperty("shellClass");
+    this.upgradeProperty("linkFactory");
 
     const attrs = parseAttributes(this);
     if (this._details == null) this._details = attrs.details;
@@ -115,7 +136,12 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
     this.render();
   }
 
-  protected abstract build(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement;
+  protected abstract build(
+    details: BrandDetails,
+    theme: BrandTheme | null,
+    shellClass: string | null,
+    linkFactory: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null,
+  ): HTMLElement;
 
   private render() {
     if (this._details == null) {
@@ -140,11 +166,11 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
     const normalizedDetails = detailsResult.normalized as NormalizedBrandDetails;
     const normalizedTheme = themeResult.normalized ?? null;
 
-    const element = this.build(normalizedDetails, normalizedTheme, this._shellClass);
+    const element = this.build(normalizedDetails, normalizedTheme, this._shellClass, this._linkFactory);
     this.replaceChildren(element);
   }
 
-  private upgradeProperty(propertyName: "details" | "theme" | "shellClass") {
+  private upgradeProperty(propertyName: "details" | "theme" | "shellClass" | "linkFactory") {
     if (Object.prototype.hasOwnProperty.call(this, propertyName)) {
       const value = (this as unknown as Record<string, unknown>)[propertyName];
       delete (this as unknown as Record<string, unknown>)[propertyName];
@@ -154,14 +180,24 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
 }
 
 export class BrandHeaderElement extends BaseBrandShellElement {
-  protected build(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement {
-    return createHeader(details, theme, shellClass);
+  protected build(
+    details: BrandDetails,
+    theme: BrandTheme | null,
+    shellClass: string | null,
+    linkFactory: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null,
+  ): HTMLElement {
+    return createHeader(details, theme, shellClass, linkFactory ?? undefined);
   }
 }
 
 export class BrandFooterElement extends BaseBrandShellElement {
-  protected build(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement {
-    return createFooter(details, theme, shellClass);
+  protected build(
+    details: BrandDetails,
+    theme: BrandTheme | null,
+    shellClass: string | null,
+    linkFactory: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null,
+  ): HTMLElement {
+    return createFooter(details, theme, shellClass, linkFactory ?? undefined);
   }
 }
 
@@ -199,6 +235,7 @@ export function applyBrandShellProps(
   element.details = validateBrandDetails(props.details).normalized ?? props.details;
   element.theme = normalizeBrandTheme(props.theme ?? null);
   element.shellClass = props.shellClass ?? null;
+  element.linkFactory = props.linkFactory ?? null;
 }
 
 export function serializeBrandShellAttributes(props: BrandShellElementProps): SerializedBrandShellAttributes {
@@ -249,7 +286,12 @@ function normalizeClassName(value: string | null): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
-function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement {
+function createHeader(
+  details: BrandDetails,
+  theme: BrandTheme | null,
+  shellClass: string | null,
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement,
+): HTMLElement {
   const header = document.createElement("header");
   header.className = joinClassNames("brand-shell-header", shellClass);
   header.setAttribute("role", "banner");
@@ -259,10 +301,9 @@ function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClas
   const inner = document.createElement("div");
   inner.className = "brand-shell-header__inner";
 
-  const identity = details.homeHref ? createAnchor(details.homeHref, "brand-shell-header__name", details.name) : createSpan("brand-shell-header__name", details.name);
-  if (details.homeHref && identity instanceof HTMLAnchorElement) {
-    identity.setAttribute("aria-label", `${details.name} home`);
-  }
+  const identity = details.homeHref
+    ? createAnchor(details.homeHref, "brand-shell-header__name", details.name, `${details.name} home`, "_self", undefined, linkFactory)
+    : createSpan("brand-shell-header__name", details.name);
   inner.append(identity);
 
   const actions = document.createElement("div");
@@ -271,11 +312,11 @@ function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClas
   const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
 
   if (navLinks.length > 0) {
-    actions.append(createNav(navLinks, "brand-shell-header", "Primary"));
+    actions.append(createNav(navLinks, "brand-shell-header", "Primary", linkFactory));
   }
 
   if (ctaLinks.length > 0) {
-    actions.append(createCtas(ctaLinks, "brand-shell-header__ctas"));
+    actions.append(createCtas(ctaLinks, "brand-shell-header__ctas", linkFactory));
   }
 
   if (socialLinks.length > 0) {
@@ -287,7 +328,12 @@ function createHeader(details: BrandDetails, theme: BrandTheme | null, shellClas
   return header;
 }
 
-function createFooter(details: BrandDetails, theme: BrandTheme | null, shellClass: string | null): HTMLElement {
+function createFooter(
+  details: BrandDetails,
+  theme: BrandTheme | null,
+  shellClass: string | null,
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement,
+): HTMLElement {
   const footer = document.createElement("footer");
   footer.className = joinClassNames("brand-shell-footer", shellClass);
   footer.setAttribute("role", "contentinfo");
@@ -311,11 +357,11 @@ function createFooter(details: BrandDetails, theme: BrandTheme | null, shellClas
   const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
 
   if (navLinks.length > 0) {
-    top.append(createNav(navLinks, "brand-shell-footer", "Footer"));
+    top.append(createNav(navLinks, "brand-shell-footer", "Footer", linkFactory));
   }
 
   if (ctaLinks.length > 0) {
-    top.append(createCtas(ctaLinks, "brand-shell-footer__ctas"));
+    top.append(createCtas(ctaLinks, "brand-shell-footer__ctas", linkFactory));
   }
 
   if (socialLinks.length > 0) {
@@ -329,7 +375,12 @@ function createFooter(details: BrandDetails, theme: BrandTheme | null, shellClas
   return footer;
 }
 
-function createNav(links: ShellNavLink[], blockClass: "brand-shell-header" | "brand-shell-footer", ariaLabel: string): HTMLElement {
+function createNav(
+  links: ShellNavLink[],
+  blockClass: "brand-shell-header" | "brand-shell-footer",
+  ariaLabel: string,
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement,
+): HTMLElement {
   const nav = document.createElement("nav");
   nav.className = `${blockClass}__nav`;
   nav.setAttribute("aria-label", ariaLabel);
@@ -339,10 +390,7 @@ function createNav(links: ShellNavLink[], blockClass: "brand-shell-header" | "br
 
   for (const link of links) {
     const item = document.createElement("li");
-    const anchor = createAnchor(link.href, `${blockClass}__link`, link.label);
-    anchor.target = link.target;
-    if (link.rel) anchor.rel = link.rel;
-    anchor.setAttribute("aria-label", link.ariaLabel);
+    const anchor = createAnchor(link.href, `${blockClass}__link`, link.label, link.ariaLabel, link.target, link.rel, linkFactory);
     item.append(anchor);
     list.append(item);
   }
@@ -351,17 +399,24 @@ function createNav(links: ShellNavLink[], blockClass: "brand-shell-header" | "br
   return nav;
 }
 
-function createCtas(actions: ShellActionLink[], containerClass: string): HTMLElement {
+function createCtas(
+  actions: ShellActionLink[],
+  containerClass: string,
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement,
+): HTMLElement {
   const container = document.createElement("div");
   container.className = containerClass;
 
   actions.forEach((action) => {
-    const anchor = createAnchor(action.href, "brand-shell-button", action.label);
-    anchor.className = joinClassNames(anchor.className, `brand-shell-button--${action.variant}`);
-    anchor.setAttribute("aria-label", action.ariaLabel);
-    anchor.target = action.target;
-    if (action.rel) anchor.rel = action.rel;
-
+    const anchor = createAnchor(
+      action.href,
+      joinClassNames("brand-shell-button", `brand-shell-button--${action.variant}`),
+      action.label,
+      action.ariaLabel,
+      action.target,
+      action.rel,
+      linkFactory,
+    );
     container.append(anchor);
   });
 
@@ -380,10 +435,12 @@ function createSocialLinks(
   for (const link of links) {
     const anchor = createAnchor(link.href, linkClass, "");
     anchor.setAttribute("aria-label", link.label);
-    anchor.target = "_blank";
-    anchor.rel = "noopener noreferrer";
+    if (!link.href.startsWith("mailto:")) {
+      anchor.target = "_blank";
+      anchor.rel = "noopener noreferrer";
+    }
 
-    const icon = createSocialIcon(link.platform);
+    const icon = createSocialIcon(link.platform, link.iconSvg);
     if (icon) {
       anchor.append(icon);
     } else {
@@ -396,7 +453,7 @@ function createSocialLinks(
   return container;
 }
 
-function createSocialIcon(platform: SocialPlatform): SVGSVGElement | null {
+function createSocialIcon(platform: SocialPlatform | string, iconSvg?: string): Element | null {
   switch (platform) {
     case "github":
       return createFilledIcon(
@@ -415,8 +472,14 @@ function createSocialIcon(platform: SocialPlatform): SVGSVGElement | null {
     case "email":
       return createStrokedIcon(["m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"], { rx: "2" });
     case "website":
-      return createStrokedIcon(["M7.9 20A9 9 0 1 0 4 16.1L2 22Z"]);
+      return createGlobeIcon();
     default:
+      if (iconSvg) {
+        const span = document.createElement("span");
+        span.setAttribute("aria-hidden", "true");
+        span.innerHTML = iconSvg;
+        return span;
+      }
       return null;
   }
 }
@@ -459,6 +522,29 @@ function createStrokedIcon(pathData: string[], rectAttributes?: Record<string, s
   return svg;
 }
 
+function createGlobeIcon(): SVGSVGElement {
+  const svg = createBaseSvg();
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2");
+  svg.setAttribute("stroke-linecap", "round");
+  svg.setAttribute("stroke-linejoin", "round");
+
+  const circle = document.createElementNS(SVG_NS, "circle");
+  circle.setAttribute("cx", "12");
+  circle.setAttribute("cy", "12");
+  circle.setAttribute("r", "10");
+  svg.append(circle);
+
+  for (const d of ["M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", "M2 12h20"]) {
+    const path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute("d", d);
+    svg.append(path);
+  }
+
+  return svg;
+}
+
 function createBaseSvg(): SVGSVGElement {
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
@@ -483,11 +569,34 @@ function joinClassNames(...classNames: Array<string | null | undefined>) {
   return classNames.filter(Boolean).join(" ");
 }
 
-function createAnchor(href: string, className: string, text: string): HTMLAnchorElement {
+function createAnchor(
+  href: string,
+  className: string,
+  text: string,
+  ariaLabel?: string,
+  target?: string,
+  rel?: string,
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement,
+): HTMLAnchorElement {
+  if (linkFactory) {
+    const anchor = linkFactory({
+      href,
+      className,
+      ariaLabel: ariaLabel ?? text,
+      target: target ?? "_self",
+      rel,
+    });
+    anchor.textContent = text;
+    return anchor;
+  }
+
   const anchor = document.createElement("a");
   anchor.href = href;
   anchor.className = className;
   anchor.textContent = text;
+  if (ariaLabel) anchor.setAttribute("aria-label", ariaLabel);
+  if (target) anchor.target = target;
+  if (rel) anchor.rel = rel;
   return anchor;
 }
 

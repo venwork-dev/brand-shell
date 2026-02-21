@@ -65,7 +65,7 @@ export function MailIcon({ className, width = "1em", height = "1em", ...props }:
   );
 }
 
-export function MessageCircleIcon({ className, width = "1em", height = "1em", ...props }: IconProps) {
+export function GlobeIcon({ className, width = "1em", height = "1em", ...props }: IconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -79,7 +79,9 @@ export function MessageCircleIcon({ className, width = "1em", height = "1em", ..
       height={height}
       {...props}
     >
-      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
     </svg>
   );
 }

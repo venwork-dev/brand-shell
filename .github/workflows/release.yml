@@ -50,43 +50,52 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   starter-canary:
-    name: Starter Canary (npm published)
+    name: Starter Canary (local pack)
     runs-on: ubuntu-latest
     needs:
       - release
     if: ${{ needs.release.outputs.published == 'true' }}
     permissions:
       contents: read
-      id-token: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-
-      - name: Setup Node
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
-        with:
-          node-version: 24.13.0
-          registry-url: https://registry.npmjs.org
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3
         with:
           bun-version: 1.3.6
 
-      - name: Resolve published version
-        id: published
-        env:
-          PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
-        run: |
-          set -euo pipefail
-          node -e 'const raw=process.env.PUBLISHED_PACKAGES||"[]"; const list=JSON.parse(raw); const hit=list.find(p=>p.name==="brand-shell"); if(!hit) process.exit(2); process.stdout.write(`VERSION=${hit.version}\n`);' >> "$GITHUB_OUTPUT"
+      - name: Install and build
+        run: bun install --frozen-lockfile && bun run build
 
-      - name: Install starter dependencies
+      - name: Pack
+        run: bun pack
+
+      - name: Install react-npm starter
         run: bun install --cwd starters/react-npm
 
-      - name: Pin brand-shell to published version
-        run: bun add brand-shell@${{ steps.published.outputs.VERSION }} --cwd starters/react-npm --exact
+      - name: Pin brand-shell in react-npm starter
+        run: bun add "$(ls brand-shell-*.tgz)" --cwd starters/react-npm --exact
 
-      - name: Build starter
+      - name: Build react-npm starter
         run: bun run --cwd starters/react-npm build
+
+      - name: Install vue-npm starter
+        run: bun install --cwd starters/vue-npm
+
+      - name: Pin brand-shell in vue-npm starter
+        run: bun add "$(ls brand-shell-*.tgz)" --cwd starters/vue-npm --exact
+
+      - name: Build vue-npm starter
+        run: bun run --cwd starters/vue-npm build
+
+      - name: Install svelte-npm starter
+        run: bun install --cwd starters/svelte-npm
+
+      - name: Pin brand-shell in svelte-npm starter
+        run: bun add "$(ls brand-shell-*.tgz)" --cwd starters/svelte-npm --exact
+
+      - name: Build svelte-npm starter
+        run: bun run --cwd starters/svelte-npm build

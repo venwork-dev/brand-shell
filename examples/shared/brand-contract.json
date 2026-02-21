@@ -13,7 +13,7 @@
     "linkedin": "https://linkedin.com/in/example",
     "github": "https://github.com/example",
     "twitter": "https://x.com/example",
-    "gmail": "hello@example.com",
+    "email": "hello@example.com",
     "tagline": "One shared brand shell across frameworks."
   },
   "theme": {

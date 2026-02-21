@@ -1,5 +1,5 @@
-export type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "./types";
-export { buildShellViewModel, normalizeBrandDetails, normalizeCtaLinks, normalizeGmailHref, normalizeNavLinks } from "./shell";
+export type { BrandAction, BrandDetails, BrandNavLink, BrandTheme, CustomSocialLink } from "./types";
+export { buildShellViewModel, buildShellViewModelFromNormalized, normalizeBrandDetails, normalizeCtaLinks, normalizeEmailHref, normalizeNavLinks } from "./shell";
 export type { LinkTarget, NormalizedBrandDetails, ShellActionLink, ShellNavLink, ShellViewModel } from "./shell";
 export { shouldValidateInDev } from "./dev";
 export { detailsToSocialLinks } from "./social";

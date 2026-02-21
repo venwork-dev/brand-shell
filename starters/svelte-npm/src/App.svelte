@@ -18,7 +18,7 @@
       },
       github: "https://github.com/venwork-dev/brand-shell",
       linkedin: "https://linkedin.com/in/example",
-      gmail: "hello@example.com",
+      email: "hello@example.com",
       tagline: "Starter app validating npm package publish output."
     },
     theme: {

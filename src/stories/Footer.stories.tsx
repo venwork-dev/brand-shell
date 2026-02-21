@@ -8,7 +8,7 @@ const sharedDetails: BrandDetails = {
   name: "Brand Shell",
   website: "https://brand-shell.dev",
   linkedin: "https://linkedin.com/in/example",
-  gmail: "hello@brand-shell.dev",
+  email: "hello@brand-shell.dev",
   github: "https://github.com/example",
   twitter: "https://twitter.com/example",
   discord: "https://discord.gg/brandshell",

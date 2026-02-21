@@ -1,8 +1,9 @@
+import type { ReactElement, ReactNode } from "react";
 import type { BrandDetails, BrandTheme } from "./types";
 import {
   assertValidBrandDetails,
   assertValidBrandTheme,
-  buildShellViewModel,
+  buildShellViewModelFromNormalized,
   normalizeBrandDetails,
   normalizeBrandTheme,
   shouldValidateInDev,
@@ -13,19 +14,29 @@ import { themeToStyle } from "./react/theme";
 import {
   DiscordIcon,
   GithubIcon,
+  GlobeIcon,
   LinkedinIcon,
   MailIcon,
-  MessageCircleIcon,
   TwitterIcon,
 } from "./icons";
+
+export interface LinkRenderProps {
+  href: string;
+  className: string;
+  "aria-label": string;
+  target: string;
+  rel?: string;
+  children: ReactNode;
+}
 
 export interface HeaderProps {
   details: BrandDetails;
   theme?: BrandTheme | null;
   className?: string;
+  renderLink?: (props: LinkRenderProps) => ReactElement;
 }
 
-export function Header({ details, theme, className }: HeaderProps) {
+export function Header({ details, theme, className, renderLink }: HeaderProps) {
   if (shouldValidateInDev()) {
     assertValidBrandDetails(details, "brand-shell/Header details");
     assertValidBrandTheme(theme, "brand-shell/Header theme");
@@ -35,16 +46,24 @@ export function Header({ details, theme, className }: HeaderProps) {
   const normalizedTheme = normalizeBrandTheme(theme);
   const ctaLayout = normalizedTheme?.ctaLayout === "stacked" ? "stacked" : "inline";
   const style = themeToStyle(normalizedTheme);
-  const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(normalizedDetails);
+  const { navLinks, ctaLinks, socialLinks } = buildShellViewModelFromNormalized(normalizedDetails);
   const combinedClassName = ["brand-shell-header", className].filter(Boolean).join(" ");
+
+  const LinkEl = renderLink
+    ? renderLink
+    : ({ href, className: cls, "aria-label": ariaLabel, target, rel, children }: LinkRenderProps) => (
+        <a href={href} className={cls} aria-label={ariaLabel} target={target} rel={rel}>{children}</a>
+      );
+
   const brandIdentity = normalizedDetails.homeHref ? (
-    <a
+    <LinkEl
       href={normalizedDetails.homeHref}
       className="brand-shell-header__name"
       aria-label={`${normalizedDetails.name} home`}
+      target="_self"
     >
       {normalizedDetails.name}
-    </a>
+    </LinkEl>
   ) : (
     <span className="brand-shell-header__name">{normalizedDetails.name}</span>
   );
@@ -60,7 +79,7 @@ export function Header({ details, theme, className }: HeaderProps) {
                 {navLinks.map((link) => {
                   return (
                     <li key={link.href + link.label}>
-                      <a
+                      <LinkEl
                         href={link.href}
                         className="brand-shell-header__link"
                         aria-label={link.ariaLabel}
@@ -68,7 +87,7 @@ export function Header({ details, theme, className }: HeaderProps) {
                         rel={link.rel}
                       >
                         {link.label}
-                      </a>
+                      </LinkEl>
                     </li>
                   );
                 })}
@@ -78,7 +97,7 @@ export function Header({ details, theme, className }: HeaderProps) {
           {ctaLinks.length > 0 && (
             <div className="brand-shell-header__ctas">
               {ctaLinks.map((action) => (
-                <a
+                <LinkEl
                   key={action.href + action.label}
                   href={action.href}
                   className={["brand-shell-button", `brand-shell-button--${action.variant}`].join(" ")}
@@ -87,24 +106,30 @@ export function Header({ details, theme, className }: HeaderProps) {
                   rel={action.rel}
                 >
                   {action.label}
-                </a>
+                </LinkEl>
               ))}
             </div>
           )}
           {socialLinks.length > 0 && (
             <div className="brand-shell-header__social" aria-label="Social links">
               {socialLinks.map((link) => {
-                const Icon = SOCIAL_ICON_COMPONENTS[link.platform];
+                const Icon = SOCIAL_ICON_COMPONENTS[link.platform as SocialPlatform];
+                const isMailto = link.href.startsWith("mailto:");
                 return (
                   <a
                     key={link.href + link.platform}
                     href={link.href}
                     className="brand-shell-header__social-link"
                     aria-label={link.label}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...(!isMailto && { target: "_blank", rel: "noopener noreferrer" })}
                   >
-                    {Icon ? <Icon aria-hidden="true" /> : <span>{link.label[0]}</span>}
+                    {Icon ? (
+                      <Icon aria-hidden="true" />
+                    ) : link.iconSvg ? (
+                      <span dangerouslySetInnerHTML={{ __html: link.iconSvg }} aria-hidden="true" />
+                    ) : (
+                      <span>{link.label[0]}</span>
+                    )}
                   </a>
                 );
               })}
@@ -117,7 +142,7 @@ export function Header({ details, theme, className }: HeaderProps) {
 }
 
 const SOCIAL_ICON_COMPONENTS: Record<SocialPlatform, (props: IconProps) => JSX.Element> = {
-  website: MessageCircleIcon,
+  website: GlobeIcon,
   linkedin: LinkedinIcon,
   email: MailIcon,
   github: GithubIcon,
