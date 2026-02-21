@@ -30,7 +30,7 @@ const DEFAULT_DETAILS: BrandDetails = {
   linkedin: "https://linkedin.com/in/example",
   github: "https://github.com/example",
   twitter: "https://x.com/example",
-  gmail: "hello@example.com",
+  email: "hello@example.com",
   tagline: "One shared brand shell across frameworks.",
 };
 
@@ -91,11 +91,11 @@ import "brand-shell/default.css";
 
 <BrandHeader :details="details" :theme="theme" />
 <BrandFooter :details="details" :theme="theme" />`,
-  svelte: `import { brandShell } from "brand-shell/svelte";
+  svelte: `import { BrandHeader, BrandFooter } from "brand-shell/svelte";
 import "brand-shell/default.css";
 
-<brand-header use:brandShell={{ details, theme }} />
-<brand-footer use:brandShell={{ details, theme }} />`,
+<BrandHeader {details} {theme} />
+<BrandFooter {details} {theme} />`,
   web: `import { applyBrandShellProps, registerBrandShellElements } from "brand-shell/web";
 import "brand-shell/default.css";
 
