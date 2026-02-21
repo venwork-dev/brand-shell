@@ -21,11 +21,15 @@ export function themeToCssVariables(theme?: BrandTheme | null): ThemeVariables {
     const buttonTextColor = getAccessibleTextColor(theme.primaryColor);
     if (buttonTextColor) style[`--${THEME_VAR_PREFIX}-button-text`] = buttonTextColor;
   }
+  if (theme.borderRadius != null) style[`--${THEME_VAR_PREFIX}-radius`] = theme.borderRadius;
+  if (theme.headerHeight != null) style[`--${THEME_VAR_PREFIX}-header-height`] = theme.headerHeight;
+  if (theme.footerPadding != null) style[`--${THEME_VAR_PREFIX}-footer-padding`] = theme.footerPadding;
+  if (theme.secondaryButtonBg != null) style[`--${THEME_VAR_PREFIX}-button-secondary`] = theme.secondaryButtonBg;
   return style;
 }
 
 function getAccessibleTextColor(backgroundColor: string): string | undefined {
-  const rgb = parseHexColor(backgroundColor);
+  const rgb = parseColorToRgb(backgroundColor);
   if (!rgb) return undefined;
 
   const contrastWithDark = contrastRatio(rgb, { r: 15, g: 23, b: 42 });
@@ -34,25 +38,36 @@ function getAccessibleTextColor(backgroundColor: string): string | undefined {
   return contrastWithDark > contrastWithLight ? DARK_TEXT : LIGHT_TEXT;
 }
 
-function parseHexColor(color: string): { r: number; g: number; b: number } | undefined {
+/**
+ * Parses a hex (#rgb / #rrggbb) or rgb()/rgba() color string to RGB components.
+ * hsl(), oklch(), and other formats are not supported and return undefined.
+ */
+function parseColorToRgb(color: string): { r: number; g: number; b: number } | undefined {
   const trimmed = color.trim();
-  const match = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(trimmed);
-  if (!match) return undefined;
 
-  const value = match[1];
-  if (value.length === 3) {
+  const hexMatch = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(trimmed);
+  if (hexMatch) {
+    const value = hexMatch[1];
+    if (value.length === 3) {
+      return {
+        r: Number.parseInt(value[0] + value[0], 16),
+        g: Number.parseInt(value[1] + value[1], 16),
+        b: Number.parseInt(value[2] + value[2], 16),
+      };
+    }
     return {
-      r: Number.parseInt(value[0] + value[0], 16),
-      g: Number.parseInt(value[1] + value[1], 16),
-      b: Number.parseInt(value[2] + value[2], 16),
+      r: Number.parseInt(value.slice(0, 2), 16),
+      g: Number.parseInt(value.slice(2, 4), 16),
+      b: Number.parseInt(value.slice(4, 6), 16),
     };
   }
 
-  return {
-    r: Number.parseInt(value.slice(0, 2), 16),
-    g: Number.parseInt(value.slice(2, 4), 16),
-    b: Number.parseInt(value.slice(4, 6), 16),
-  };
+  const rgbMatch = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(trimmed);
+  if (rgbMatch) {
+    return { r: +rgbMatch[1], g: +rgbMatch[2], b: +rgbMatch[3] };
+  }
+
+  return undefined;
 }
 
 function contrastRatio(

@@ -1,7 +1,7 @@
 const { execSync } = require("node:child_process");
 
 const ALLOWED_ROOT_FILES = new Set(["package.json", "README.md", "LICENSE"]);
-const DIST_PREFIX = "dist/";
+const ALLOWED_PREFIXES = ["dist/", "src/svelte/"];
 const MAX_UNPACKED_SIZE_KB = 220;
 
 const output = execSync("bun pm pack --dry-run --ignore-scripts", {
@@ -21,7 +21,7 @@ const files = packedLines
   .filter((file) => Boolean(file));
 
 const disallowedFiles = files.filter(
-  (file) => !file.startsWith(DIST_PREFIX) && !ALLOWED_ROOT_FILES.has(file),
+  (file) => !ALLOWED_PREFIXES.some((prefix) => file.startsWith(prefix)) && !ALLOWED_ROOT_FILES.has(file),
 );
 
 if (disallowedFiles.length > 0) {

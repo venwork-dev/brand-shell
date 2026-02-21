@@ -25,7 +25,7 @@ describe("web adapter smoke", () => {
       homeHref: "/",
       navLinks: [{ label: "Docs", href: "/docs" }],
       primaryAction: { label: "Contact", href: "mailto:hello@example.com" },
-      gmail: "hello@example.com",
+      email: "hello@example.com",
     };
     const theme = {
       primaryColor: "#0ea5e9",

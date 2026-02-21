@@ -1,4 +1,19 @@
 /**
+ * A custom social link for platforms not built into brand-shell.
+ * Built-in platforms retain priority; custom links are appended in insertion order.
+ */
+export interface CustomSocialLink {
+  /** Arbitrary identifier used as a key (e.g. "bluesky", "mastodon") */
+  platform: string;
+  /** Link URL (must be a safe href) */
+  href: string;
+  /** Accessible label (used as aria-label) */
+  label: string;
+  /** Optional inline SVG string (24×24 viewBox). aria-hidden="true" is added automatically. */
+  iconSvg?: string;
+}
+
+/**
  * Schema for header/footer content. Caller passes these; package does not store them.
  */
 export interface BrandNavLink {
@@ -43,7 +58,7 @@ export interface BrandDetails {
   /** LinkedIn profile URL */
   linkedin?: string;
   /** Email address (e.g. mailto: or plain) */
-  gmail?: string;
+  email?: string;
   /** GitHub profile URL */
   github?: string;
   /** Twitter/X profile URL */
@@ -54,6 +69,8 @@ export interface BrandDetails {
   website?: string;
   /** Optional tagline (e.g. in footer) */
   tagline?: string;
+  /** Additional social links for custom platforms (Bluesky, Mastodon, YouTube, etc.) */
+  customSocialLinks?: CustomSocialLink[];
 }
 
 /**
@@ -77,4 +94,12 @@ export interface BrandTheme {
   buttonTextColor?: string;
   /** Mobile CTA arrangement: side-by-side (`inline`) or one-per-row (`stacked`) */
   ctaLayout?: "inline" | "stacked";
+  /** Border radius for buttons and containers (e.g. 0.5rem, 4px) → --brand-radius */
+  borderRadius?: string;
+  /** Header height override (e.g. 4rem, 64px) → --brand-header-height */
+  headerHeight?: string;
+  /** Footer padding override (e.g. 3rem 1.5rem) → --brand-footer-padding */
+  footerPadding?: string;
+  /** Secondary button background color → --brand-button-secondary */
+  secondaryButtonBg?: string;
 }

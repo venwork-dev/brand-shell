@@ -1,6 +1,6 @@
-import { normalizeBrandDetails, normalizeGmailHref, type NormalizedBrandDetails } from "./shell";
+import { normalizeBrandDetails, normalizeEmailHref, type NormalizedBrandDetails } from "./shell";
 import { normalizeSafeHref } from "./links";
-import type { BrandAction, BrandDetails, BrandNavLink, BrandTheme } from "./types";
+import type { BrandAction, BrandDetails, BrandNavLink, BrandTheme, CustomSocialLink } from "./types";
 
 const LINK_TARGETS = new Set<NonNullable<BrandNavLink["target"]>>(["_blank", "_self", "_parent", "_top"]);
 const CTA_VARIANTS = new Set<NonNullable<BrandAction["variant"]>>(["primary", "secondary", "ghost"]);
@@ -14,6 +14,10 @@ const THEME_KEYS = new Set<keyof BrandTheme>([
   "socialIconSize",
   "buttonTextColor",
   "ctaLayout",
+  "borderRadius",
+  "headerHeight",
+  "footerPadding",
+  "secondaryButtonBg",
 ]);
 
 type ValidationErrorPath = string;
@@ -51,8 +55,8 @@ export function validateBrandDetails(details: unknown): BrandValidationResult<No
   validateSafeHref(details.website, "details.website", errors);
   validateOptionalString(details.linkedin, "details.linkedin", errors);
   validateSafeHref(details.linkedin, "details.linkedin", errors);
-  validateOptionalString(details.gmail, "details.gmail", errors);
-  validateGmail(details.gmail, "details.gmail", errors);
+  validateOptionalString(details.email, "details.email", errors);
+  validateEmail(details.email, "details.email", errors);
   validateOptionalString(details.github, "details.github", errors);
   validateSafeHref(details.github, "details.github", errors);
   validateOptionalString(details.twitter, "details.twitter", errors);
@@ -74,6 +78,16 @@ export function validateBrandDetails(details: unknown): BrandValidationResult<No
   }
   if (details.secondaryAction != null) {
     validateAction(details.secondaryAction, "details.secondaryAction", errors);
+  }
+
+  if (details.customSocialLinks != null) {
+    if (!Array.isArray(details.customSocialLinks)) {
+      errors.push("details.customSocialLinks must be an array.");
+    } else {
+      details.customSocialLinks.forEach((link, index) =>
+        validateCustomSocialLink(link, `details.customSocialLinks[${index}]`, errors),
+      );
+    }
   }
 
   if (errors.length > 0) {
@@ -202,6 +216,23 @@ function validateAction(action: unknown, path: ValidationErrorPath, errors: stri
   }
 }
 
+function validateCustomSocialLink(link: unknown, path: ValidationErrorPath, errors: string[]) {
+  if (!isRecord(link)) {
+    errors.push(`${path} must be an object.`);
+    return;
+  }
+
+  if (typeof link.platform !== "string" || link.platform.trim().length === 0) {
+    errors.push(`${path}.platform must be a non-empty string.`);
+  }
+  validateRequiredString(link.label, `${path}.label`, errors);
+  validateRequiredString(link.href, `${path}.href`, errors);
+  validateSafeHref(link.href, `${path}.href`, errors);
+  if (link.iconSvg != null) {
+    validateOptionalString(link.iconSvg, `${path}.iconSvg`, errors);
+  }
+}
+
 function validateTarget(target: unknown, path: ValidationErrorPath, errors: string[]) {
   if (target == null) return;
   if (typeof target !== "string" || !LINK_TARGETS.has(target as NonNullable<BrandNavLink["target"]>)) {
@@ -237,10 +268,10 @@ function validateSafeHref(value: unknown, path: ValidationErrorPath, errors: str
   }
 }
 
-function validateGmail(value: unknown, path: ValidationErrorPath, errors: string[]) {
+function validateEmail(value: unknown, path: ValidationErrorPath, errors: string[]) {
   if (value == null) return;
   if (typeof value !== "string" || value.trim().length === 0) return;
-  if (!normalizeGmailHref(value)) {
+  if (!normalizeEmailHref(value)) {
     errors.push(`${path} must be a valid email or mailto URL.`);
   }
 }

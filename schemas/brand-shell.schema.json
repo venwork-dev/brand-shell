@@ -15,6 +15,17 @@
     }
   },
   "$defs": {
+    "CustomSocialLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "href", "label"],
+      "properties": {
+        "platform": { "type": "string", "minLength": 1 },
+        "href": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "iconSvg": { "type": "string", "minLength": 1 }
+      }
+    },
     "Target": {
       "type": "string",
       "enum": ["_blank", "_self", "_parent", "_top"]
@@ -63,12 +74,16 @@
         "primaryAction": { "$ref": "#/$defs/BrandAction" },
         "secondaryAction": { "$ref": "#/$defs/BrandAction" },
         "linkedin": { "type": "string", "minLength": 1 },
-        "gmail": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "minLength": 1 },
         "github": { "type": "string", "minLength": 1 },
         "twitter": { "type": "string", "minLength": 1 },
         "discord": { "type": "string", "minLength": 1 },
         "website": { "type": "string", "minLength": 1 },
-        "tagline": { "type": "string", "minLength": 1 }
+        "tagline": { "type": "string", "minLength": 1 },
+        "customSocialLinks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CustomSocialLink" }
+        }
       }
     },
     "BrandTheme": {
@@ -82,7 +97,11 @@
         "linkColor": { "type": "string", "minLength": 1 },
         "socialIconSize": { "type": "string", "minLength": 1 },
         "buttonTextColor": { "type": "string", "minLength": 1 },
-        "ctaLayout": { "type": "string", "enum": ["inline", "stacked"] }
+        "ctaLayout": { "type": "string", "enum": ["inline", "stacked"] },
+        "borderRadius": { "type": "string", "minLength": 1 },
+        "headerHeight": { "type": "string", "minLength": 1 },
+        "footerPadding": { "type": "string", "minLength": 1 },
+        "secondaryButtonBg": { "type": "string", "minLength": 1 }
       }
     }
   }

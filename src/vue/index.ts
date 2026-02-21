@@ -2,14 +2,16 @@ import { defineComponent, h, onMounted, ref, watch, type PropType } from "vue";
 
 import type { BrandDetails, BrandTheme } from "../core";
 import { assertValidBrandDetails, assertValidBrandTheme, shouldValidateInDev } from "../core";
-import { applyBrandShellProps, registerBrandShellElements, type BrandShellElementLike } from "../web";
+import { applyBrandShellProps, registerBrandShellElements, type BrandShellElementLike, type LinkFactoryOptions } from "../web";
 
 export type { BrandDetails, BrandTheme } from "../core";
+export type { LinkFactoryOptions } from "../web";
 
 export interface BrandShellVueProps {
   details: BrandDetails;
   theme?: BrandTheme | null;
   shellClass?: string | null;
+  linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement;
 }
 
 function ensureBrandShellElementsRegistered() {
@@ -37,6 +39,10 @@ function createBrandShellVueComponent(
         type: String as PropType<string | null>,
         default: null,
       },
+      linkFactory: {
+        type: Function as unknown as PropType<((options: LinkFactoryOptions) => HTMLAnchorElement) | null>,
+        default: null,
+      },
     },
     setup(props) {
       ensureBrandShellElementsRegistered();
@@ -53,6 +59,7 @@ function createBrandShellVueComponent(
           details: props.details,
           theme: props.theme ?? null,
           shellClass: props.shellClass ?? null,
+          linkFactory: props.linkFactory ?? undefined,
         });
       };
 
@@ -61,7 +68,7 @@ function createBrandShellVueComponent(
       });
 
       watch(
-        () => [props.details, props.theme, props.shellClass],
+        () => [props.details, props.theme, props.shellClass, props.linkFactory],
         () => {
           syncProps();
         },

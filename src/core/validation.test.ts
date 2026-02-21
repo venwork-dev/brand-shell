@@ -13,13 +13,13 @@ describe("validateBrandDetails", () => {
   it("returns normalized details when valid", () => {
     const result = validateBrandDetails({
       name: "Brand Shell",
-      gmail: "hello@example.com",
+      email: "hello@example.com",
       navLinks: [{ label: "Docs", href: "/docs" }],
       primaryAction: { label: "Contact", href: "mailto:hello@example.com", target: "_blank" },
     });
 
     expect(result.valid).toBe(true);
-    expect(result.normalized?.gmail).toBe("mailto:hello@example.com");
+    expect(result.normalized?.email).toBe("mailto:hello@example.com");
     expect(result.normalized?.navLinks[0]).toMatchObject({
       label: "Docs",
       href: "/docs",
@@ -66,14 +66,14 @@ describe("validateBrandDetails", () => {
     );
   });
 
-  it("rejects invalid gmail payloads", () => {
+  it("rejects invalid email payloads", () => {
     const result = validateBrandDetails({
       name: "Brand Shell",
-      gmail: "mailto:",
+      email: "mailto:",
     });
 
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain("details.gmail must be a valid email or mailto URL.");
+    expect(result.errors).toContain("details.email must be a valid email or mailto URL.");
   });
 });
 

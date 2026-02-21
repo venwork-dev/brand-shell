@@ -11,8 +11,6 @@
     "url": "https://github.com/venwork-dev/brand-shell/issues"
   },
   "type": "module",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
@@ -28,6 +26,7 @@
       "types": "./dist/vue.d.mts"
     },
     "./svelte": {
+      "svelte": "./src/svelte/index.svelte.ts",
       "import": "./dist/svelte.mjs",
       "types": "./dist/svelte.d.mts"
     },
@@ -37,7 +36,10 @@
     "./dist/default.css": "./dist/default.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/svelte/BrandHeader.svelte",
+    "src/svelte/BrandFooter.svelte",
+    "src/svelte/index.svelte.ts"
   ],
   "scripts": {
     "prepare": "bun run build",

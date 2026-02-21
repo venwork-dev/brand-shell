@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { detailsToSocialLinks } from "./social";
 
 describe("detailsToSocialLinks", () => {
-  it("normalizes plain gmail addresses to mailto links", () => {
+  it("includes email as mailto link", () => {
     const links = detailsToSocialLinks({
       name: "Brand",
-      gmail: "hello@example.com",
+      email: "mailto:hello@example.com",
     });
 
     expect(links).toEqual([{ platform: "email", href: "mailto:hello@example.com", label: "Email" }]);
@@ -17,7 +17,7 @@ describe("detailsToSocialLinks", () => {
       name: "Brand",
       website: "https://brand.dev",
       linkedin: "https://linkedin.com/in/brand",
-      gmail: "mailto:hello@example.com",
+      email: "mailto:hello@example.com",
       github: "https://github.com/brand",
       twitter: "https://x.com/brand",
       discord: "https://discord.gg/brand",

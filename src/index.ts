@@ -1,17 +1,20 @@
 export { Header } from "./Header";
+export type { HeaderProps, LinkRenderProps } from "./Header";
 export { Footer } from "./Footer";
+export type { FooterProps } from "./Footer";
 export type { BrandDetails, BrandTheme, BrandNavLink, BrandAction } from "./types";
 export {
   BrandShellValidationError,
   assertValidBrandDetails,
   assertValidBrandTheme,
   buildShellViewModel,
+  buildShellViewModelFromNormalized,
   detailsToSocialLinks,
   formatValidationErrors,
   normalizeBrandDetails,
   normalizeBrandTheme,
   normalizeCtaLinks,
-  normalizeGmailHref,
+  normalizeEmailHref,
   normalizeNavLinks,
   shouldValidateInDev,
   themeToCssVariables,
@@ -20,6 +23,7 @@ export {
 } from "./core";
 export type {
   BrandValidationResult,
+  CustomSocialLink,
   LinkTarget,
   NormalizedBrandDetails,
   ShellActionLink,
