@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.12.0
+
+### Minor Changes
+
+- 179f91f: architecture change to build artifacts and app build
+
 ## 0.11.0
 
 ### Minor Changes
