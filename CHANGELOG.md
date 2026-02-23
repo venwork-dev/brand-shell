@@ -1,5 +1,11 @@
 # brand-shell
 
+## 0.15.0
+
+### Minor Changes
+
+- 8b04a4d: introduce logo src for customizable logo addition
+
 ## 0.14.0
 
 ### Minor Changes
