@@ -32,6 +32,8 @@ const DEFAULT_DETAILS: BrandDetails = {
   twitter: "https://x.com/example",
   email: "hello@example.com",
   tagline: "One shared brand shell across frameworks.",
+  logoSrc: "https://avatars.githubusercontent.com/u/9919?s=64&v=4",
+  logoAlt: "Brand Shell",
 };
 
 const DEFAULT_THEME: BrandTheme = {

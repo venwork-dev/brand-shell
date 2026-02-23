@@ -53,7 +53,15 @@ export function Footer({ details, theme, className, renderLink }: FooterProps) {
       <div className="brand-shell-footer__inner">
         <div className="brand-shell-footer__top">
           <div className="brand-shell-footer__brand">
-            <p className="brand-shell-footer__name">{normalizedDetails.name}</p>
+            {normalizedDetails.logoSrc ? (
+              <img
+                src={normalizedDetails.logoSrc}
+                alt={normalizedDetails.logoAlt ?? normalizedDetails.name}
+                className="brand-shell-footer__logo"
+              />
+            ) : (
+              <p className="brand-shell-footer__name">{normalizedDetails.name}</p>
+            )}
             {normalizedDetails.tagline && <p className="brand-shell-footer__tagline">{normalizedDetails.tagline}</p>}
           </div>
           {navLinks.length > 0 && (

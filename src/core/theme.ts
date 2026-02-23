@@ -25,6 +25,7 @@ export function themeToCssVariables(theme?: BrandTheme | null): ThemeVariables {
   if (theme.headerHeight != null) style[`--${THEME_VAR_PREFIX}-header-height`] = theme.headerHeight;
   if (theme.footerPadding != null) style[`--${THEME_VAR_PREFIX}-footer-padding`] = theme.footerPadding;
   if (theme.secondaryButtonBg != null) style[`--${THEME_VAR_PREFIX}-button-secondary`] = theme.secondaryButtonBg;
+  if (theme.logoHeight != null) style[`--${THEME_VAR_PREFIX}-logo-height`] = theme.logoHeight;
   return style;
 }
 

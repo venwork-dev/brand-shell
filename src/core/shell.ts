@@ -64,6 +64,8 @@ export function normalizeBrandDetails(details: BrandDetails): NormalizedBrandDet
     primaryAction: normalizedPrimaryAction,
     secondaryAction: normalizedSecondaryAction,
     customSocialLinks: normalizeCustomSocialLinks(details.customSocialLinks),
+    logoSrc: normalizeSafeHref(details.logoSrc),
+    logoAlt: details.logoAlt,
   };
 }
 

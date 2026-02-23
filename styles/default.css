@@ -109,6 +109,18 @@
   color: var(--_primary);
 }
 
+.brand-shell-header__logo {
+  height: var(--brand-logo-height, 2rem);
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Hide decorative dot when logo is present */
+.brand-shell-header__name:has(.brand-shell-header__logo)::before {
+  display: none;
+}
+
 .brand-shell-header__name:focus-visible {
   outline: 2px solid var(--_primary);
   outline-offset: 3px;
@@ -435,6 +447,14 @@
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 var(--brand-space-sm) 0;
+}
+
+.brand-shell-footer__logo {
+  height: calc(var(--brand-logo-height, 2rem) * 0.75);
+  width: auto;
+  display: block;
+  object-fit: contain;
+  margin-bottom: var(--brand-space-sm);
 }
 
 .brand-shell-footer__nav {
