@@ -15,14 +15,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          fetch-depth: 0
 
-      - name: Check if version needs publishing
+      - name: Check release mode
         id: check
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          if git tag --list "brand-shell@${VERSION}" | grep -qF "brand-shell@${VERSION}"; then
+          count=$(find .changeset -maxdepth 1 -name "*.md" ! -name "README.md" 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$count" -gt 0 ]; then
             echo "publish_mode=false" >> "$GITHUB_OUTPUT"
           else
             echo "publish_mode=true" >> "$GITHUB_OUTPUT"
