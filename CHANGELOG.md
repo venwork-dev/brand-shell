@@ -1,5 +1,17 @@
 # brand-shell
 
+## 0.14.0
+
+### Minor Changes
+
+- b887732: use npm pack
+
+### Patch Changes
+
+- 374b96f: replace brand-shell usage with specific BrandHeader and BrandFooter components
+- 289acbe: update release check logic in GitHub Actions workflow
+- 15fa32d: update tarball path in GitHub Actions workflow
+
 ## 0.13.0
 
 ### Minor Changes
