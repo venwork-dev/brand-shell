@@ -7,16 +7,35 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    name: Version & Publish
+  detect-mode:
+    name: Detect Release Mode
     runs-on: ubuntu-latest
+    outputs:
+      publish_mode: ${{ steps.check.outputs.publish_mode }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Check if version needs publishing
+        id: check
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if git tag --list "brand-shell@${VERSION}" | grep -qF "brand-shell@${VERSION}"; then
+            echo "publish_mode=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish_mode=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  create-release-pr:
+    name: Create / Update Release PR
+    runs-on: ubuntu-latest
+    needs: detect-mode
+    if: needs.detect-mode.outputs.publish_mode == 'false'
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
-    outputs:
-      published: ${{ steps.changesets.outputs.published }}
-      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
 
     steps:
       - name: Checkout
@@ -38,64 +57,81 @@ jobs:
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Create release PR or publish
-        id: changesets
+      - name: Create or update Release PR
         uses: changesets/action@v1
         with:
           version: bun run version:packages
-          publish: bun run release:publish
           title: "chore(release): version packages"
           commit: "chore(release): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  starter-canary:
-    name: Starter Canary (local pack)
+  validate-and-publish:
+    name: Validate & Publish
     runs-on: ubuntu-latest
-    needs:
-      - release
-    if: ${{ needs.release.outputs.published == 'true' }}
+    needs: detect-mode
+    if: needs.detect-mode.outputs.publish_mode == 'true'
     permissions:
-      contents: read
+      contents: write
+      id-token: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24.13.0
+          registry-url: https://registry.npmjs.org
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3
         with:
           bun-version: 1.3.6
 
-      - name: Install and build
-        run: bun install --frozen-lockfile && bun run build
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
 
-      - name: Pack
-        run: bun pm pack
+      # ── Step 1: Build ──────────────────────────────────────────────────────
+      - name: Build
+        run: bun run build
 
-      - name: Install react-npm starter
-        run: bun install --cwd starters/react-npm
+      # ── Step 2: Pack tarball ───────────────────────────────────────────────
+      - name: Pack tarball
+        id: pack
+        run: |
+          bun pm pack
+          echo "tarball=$(ls brand-shell-*.tgz)" >> "$GITHUB_OUTPUT"
 
-      - name: Pin brand-shell in react-npm starter
-        run: bun add "$(ls brand-shell-*.tgz)" --cwd starters/react-npm --exact
+      # ── Step 3: Test (unit + web-smoke + storybook) ───────────────────────
+      - name: Install Playwright browsers
+        run: bunx playwright install chromium --with-deps
 
-      - name: Build react-npm starter
-        run: bun run --cwd starters/react-npm build
+      - name: Run tests
+        run: bun run test
 
-      - name: Install vue-npm starter
-        run: bun install --cwd starters/vue-npm
+      # ── Step 4: Canary builds from tarball ────────────────────────────────
+      - name: Canary — react-npm
+        run: |
+          bun install --cwd starters/react-npm
+          bun add "./${{ steps.pack.outputs.tarball }}" --cwd starters/react-npm --exact
+          bun run --cwd starters/react-npm build
 
-      - name: Pin brand-shell in vue-npm starter
-        run: bun add "$(ls brand-shell-*.tgz)" --cwd starters/vue-npm --exact
+      - name: Canary — vue-npm
+        run: |
+          bun install --cwd starters/vue-npm
+          bun add "./${{ steps.pack.outputs.tarball }}" --cwd starters/vue-npm --exact
+          bun run --cwd starters/vue-npm build
 
-      - name: Build vue-npm starter
-        run: bun run --cwd starters/vue-npm build
+      - name: Canary — svelte-npm
+        run: |
+          bun install --cwd starters/svelte-npm
+          bun add "./${{ steps.pack.outputs.tarball }}" --cwd starters/svelte-npm --exact
+          bun run --cwd starters/svelte-npm build
 
-      - name: Install svelte-npm starter
-        run: bun install --cwd starters/svelte-npm
-
-      - name: Pin brand-shell in svelte-npm starter
-        run: bun add "$(ls brand-shell-*.tgz)" --cwd starters/svelte-npm --exact
-
-      - name: Build svelte-npm starter
-        run: bun run --cwd starters/svelte-npm build
+      # ── Step 5: Publish to npm (only if all above passed) ─────────────────
+      - name: Publish to npm
+        run: bun run release:publish
