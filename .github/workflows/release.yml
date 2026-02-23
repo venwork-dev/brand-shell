@@ -104,7 +104,7 @@ jobs:
         id: pack
         run: |
           bun pm pack
-          echo "tarball=$(ls brand-shell-*.tgz)" >> "$GITHUB_OUTPUT"
+          echo "tarball=$(pwd)/$(ls brand-shell-*.tgz)" >> "$GITHUB_OUTPUT"
 
       # ── Step 3: Test (unit + web-smoke + storybook) ───────────────────────
       - name: Install Playwright browsers
@@ -117,19 +117,19 @@ jobs:
       - name: Canary — react-npm
         run: |
           bun install --cwd starters/react-npm
-          bun add "./${{ steps.pack.outputs.tarball }}" --cwd starters/react-npm --exact
+          bun add "${{ steps.pack.outputs.tarball }}" --cwd starters/react-npm --exact
           bun run --cwd starters/react-npm build
 
       - name: Canary — vue-npm
         run: |
           bun install --cwd starters/vue-npm
-          bun add "./${{ steps.pack.outputs.tarball }}" --cwd starters/vue-npm --exact
+          bun add "${{ steps.pack.outputs.tarball }}" --cwd starters/vue-npm --exact
           bun run --cwd starters/vue-npm build
 
       - name: Canary — svelte-npm
         run: |
           bun install --cwd starters/svelte-npm
-          bun add "./${{ steps.pack.outputs.tarball }}" --cwd starters/svelte-npm --exact
+          bun add "${{ steps.pack.outputs.tarball }}" --cwd starters/svelte-npm --exact
           bun run --cwd starters/svelte-npm build
 
       # ── Step 5: Publish to npm (only if all above passed) ─────────────────
