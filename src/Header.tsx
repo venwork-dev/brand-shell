@@ -55,6 +55,16 @@ export function Header({ details, theme, className, renderLink }: HeaderProps) {
         <a href={href} className={cls} aria-label={ariaLabel} target={target} rel={rel}>{children}</a>
       );
 
+  const logoContent = normalizedDetails.logoSrc ? (
+    <img
+      src={normalizedDetails.logoSrc}
+      alt={normalizedDetails.logoAlt ?? normalizedDetails.name}
+      className="brand-shell-header__logo"
+    />
+  ) : (
+    normalizedDetails.name
+  );
+
   const brandIdentity = normalizedDetails.homeHref ? (
     <LinkEl
       href={normalizedDetails.homeHref}
@@ -62,10 +72,10 @@ export function Header({ details, theme, className, renderLink }: HeaderProps) {
       aria-label={`${normalizedDetails.name} home`}
       target="_self"
     >
-      {normalizedDetails.name}
+      {logoContent}
     </LinkEl>
   ) : (
-    <span className="brand-shell-header__name">{normalizedDetails.name}</span>
+    <span className="brand-shell-header__name">{logoContent}</span>
   );
 
   return (

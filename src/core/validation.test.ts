@@ -75,6 +75,52 @@ describe("validateBrandDetails", () => {
     expect(result.valid).toBe(false);
     expect(result.errors).toContain("details.email must be a valid email or mailto URL.");
   });
+
+  it("accepts valid logoSrc and logoAlt", () => {
+    const result = validateBrandDetails({
+      name: "Brand Shell",
+      logoSrc: "https://example.com/logo.svg",
+      logoAlt: "Brand Shell logo",
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.normalized?.logoSrc).toBe("https://example.com/logo.svg");
+    expect(result.normalized?.logoAlt).toBe("Brand Shell logo");
+  });
+
+  it("accepts relative logoSrc", () => {
+    const result = validateBrandDetails({
+      name: "Brand Shell",
+      logoSrc: "/images/logo.svg",
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.normalized?.logoSrc).toBe("/images/logo.svg");
+    expect(result.normalized?.logoAlt).toBeUndefined();
+  });
+
+  it("rejects unsafe logoSrc protocols", () => {
+    const result = validateBrandDetails({
+      name: "Brand Shell",
+      logoSrc: "javascript:alert(1)",
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      "details.logoSrc must use a safe URL/path (http, https, mailto, tel, or relative path).",
+    );
+  });
+
+  it("accepts logoSrc without logoAlt, logoAlt defaults to name", () => {
+    const result = validateBrandDetails({
+      name: "Acme Corp",
+      logoSrc: "https://example.com/logo.png",
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.normalized?.logoSrc).toBe("https://example.com/logo.png");
+    expect(result.normalized?.logoAlt).toBeUndefined();
+  });
 });
 
 describe("validateBrandTheme", () => {

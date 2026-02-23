@@ -71,6 +71,10 @@ export interface BrandDetails {
   tagline?: string;
   /** Additional social links for custom platforms (Bluesky, Mastodon, YouTube, etc.) */
   customSocialLinks?: CustomSocialLink[];
+  /** URL to logo image shown in header/footer. Replaces the text name visually. */
+  logoSrc?: string;
+  /** Alt text for the logo. Defaults to `name` if omitted. */
+  logoAlt?: string;
 }
 
 /**
@@ -102,4 +106,6 @@ export interface BrandTheme {
   footerPadding?: string;
   /** Secondary button background color → --brand-button-secondary */
   secondaryButtonBg?: string;
+  /** Logo image height (e.g. "2rem", "32px") → --brand-logo-height */
+  logoHeight?: string;
 }

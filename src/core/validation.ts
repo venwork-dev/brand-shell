@@ -18,6 +18,7 @@ const THEME_KEYS = new Set<keyof BrandTheme>([
   "headerHeight",
   "footerPadding",
   "secondaryButtonBg",
+  "logoHeight",
 ]);
 
 type ValidationErrorPath = string;
@@ -64,6 +65,9 @@ export function validateBrandDetails(details: unknown): BrandValidationResult<No
   validateOptionalString(details.discord, "details.discord", errors);
   validateSafeHref(details.discord, "details.discord", errors);
   validateOptionalString(details.tagline, "details.tagline", errors);
+  validateOptionalString(details.logoSrc, "details.logoSrc", errors);
+  validateSafeHref(details.logoSrc, "details.logoSrc", errors);
+  validateOptionalString(details.logoAlt, "details.logoAlt", errors);
 
   if (details.navLinks != null) {
     if (!Array.isArray(details.navLinks)) {

@@ -83,7 +83,9 @@
         "customSocialLinks": {
           "type": "array",
           "items": { "$ref": "#/$defs/CustomSocialLink" }
-        }
+        },
+        "logoSrc": { "type": "string", "minLength": 1 },
+        "logoAlt": { "type": "string", "minLength": 1 }
       }
     },
     "BrandTheme": {
@@ -101,7 +103,8 @@
         "borderRadius": { "type": "string", "minLength": 1 },
         "headerHeight": { "type": "string", "minLength": 1 },
         "footerPadding": { "type": "string", "minLength": 1 },
-        "secondaryButtonBg": { "type": "string", "minLength": 1 }
+        "secondaryButtonBg": { "type": "string", "minLength": 1 },
+        "logoHeight": { "type": "string", "minLength": 1 }
       }
     }
   }

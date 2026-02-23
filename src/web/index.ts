@@ -305,6 +305,14 @@ function createHeader(
   const identity = details.homeHref
     ? createAnchor(details.homeHref, "brand-shell-header__name", details.name, `${details.name} home`, "_self", undefined, linkFactory)
     : createSpan("brand-shell-header__name", details.name);
+  if (details.logoSrc) {
+    const img = document.createElement("img");
+    img.src = details.logoSrc;
+    img.alt = details.logoAlt ?? details.name;
+    img.className = "brand-shell-header__logo";
+    identity.textContent = "";
+    identity.append(img);
+  }
   inner.append(identity);
 
   const actions = document.createElement("div");
@@ -349,7 +357,15 @@ function createFooter(
 
   const brand = document.createElement("div");
   brand.className = "brand-shell-footer__brand";
-  brand.append(createParagraph("brand-shell-footer__name", details.name));
+  if (details.logoSrc) {
+    const img = document.createElement("img");
+    img.src = details.logoSrc;
+    img.alt = details.logoAlt ?? details.name;
+    img.className = "brand-shell-footer__logo";
+    brand.append(img);
+  } else {
+    brand.append(createParagraph("brand-shell-footer__name", details.name));
+  }
   if (details.tagline) {
     brand.append(createParagraph("brand-shell-footer__tagline", details.tagline));
   }
