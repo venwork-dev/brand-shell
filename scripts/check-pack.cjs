@@ -32,12 +32,14 @@ if (disallowedFiles.length > 0) {
   );
 }
 
-const sizeMatch = /Unpacked size:\s+([\d.]+)KB/.exec(output);
+const sizeMatch = /Unpacked size:\s+([\d.]+)(KB|MB)/.exec(output);
 if (!sizeMatch) {
   throw new Error("Pack check failed. Could not determine unpacked package size.");
 }
 
-const unpackedSizeKb = Number(sizeMatch[1]);
+const rawSize = Number(sizeMatch[1]);
+const unit = sizeMatch[2];
+const unpackedSizeKb = unit === "MB" ? Math.round(rawSize * 1024) : rawSize;
 if (!Number.isFinite(unpackedSizeKb)) {
   throw new Error("Pack check failed. Parsed unpacked package size is not a valid number.");
 }

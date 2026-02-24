@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
 import type { BrandDetails, BrandTheme } from "./types";
 import {
