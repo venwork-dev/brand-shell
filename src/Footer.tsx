@@ -144,7 +144,9 @@ export function Footer({ details, theme, className, renderLink }: FooterProps) {
             </div>
           )}
         </div>
-        <p className="brand-shell-footer__copy">&copy; {new Date().getFullYear()} {normalizedDetails.name}</p>
+        <p className="brand-shell-footer__copy">
+          {normalizedDetails.copyrightText ?? `\u00a9 ${new Date().getFullYear()} ${normalizedDetails.name}`}
+        </p>
       </div>
     </footer>
   );

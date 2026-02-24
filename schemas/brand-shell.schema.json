@@ -85,7 +85,8 @@
           "items": { "$ref": "#/$defs/CustomSocialLink" }
         },
         "logoSrc": { "type": "string", "minLength": 1 },
-        "logoAlt": { "type": "string", "minLength": 1 }
+        "logoAlt": { "type": "string", "minLength": 1 },
+        "copyrightText": { "type": "string", "minLength": 1 }
       }
     },
     "BrandTheme": {

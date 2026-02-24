@@ -80,6 +80,7 @@ export function Header({ details, theme, className, renderLink }: HeaderProps) {
 
   return (
     <header className={combinedClassName} data-brand-cta-layout={ctaLayout} style={style} role="banner">
+      <a href="#main-content" className="brand-shell-skip-nav">Skip to main content</a>
       <div className="brand-shell-header__inner">
         {brandIdentity}
         <div className="brand-shell-header__actions">

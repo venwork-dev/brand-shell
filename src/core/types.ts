@@ -75,6 +75,8 @@ export interface BrandDetails {
   logoSrc?: string;
   /** Alt text for the logo. Defaults to `name` if omitted. */
   logoAlt?: string;
+  /** Custom copyright line shown in the footer. Defaults to `© {year} {name}` when omitted. */
+  copyrightText?: string;
 }
 
 /**

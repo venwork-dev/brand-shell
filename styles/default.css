@@ -19,6 +19,31 @@
   --brand-button-secondary: rgba(255, 255, 255, 0.12);
 }
 
+/* Skip navigation link — visually hidden until focused */
+.brand-shell-skip-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  padding: 0.6rem 1.2rem;
+  background: var(--_bg, var(--brand-bg));
+  color: var(--_text, var(--brand-text));
+  font-family: var(--_font, var(--brand-font));
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--brand-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+
+.brand-shell-skip-nav:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--_primary, var(--brand-primary));
+  outline-offset: 2px;
+}
+
 .brand-shell-header,
 .brand-shell-header *,
 .brand-shell-header *::before,

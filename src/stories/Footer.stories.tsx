@@ -171,3 +171,12 @@ export const WithLogoAndCustomHeight: Story = {
     },
   },
 };
+
+export const CustomCopyright: Story = {
+  args: {
+    details: {
+      ...sharedDetails,
+      copyrightText: "© 2026 Acme Corp. All rights reserved.",
+    },
+  },
+};
