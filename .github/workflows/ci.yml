@@ -157,7 +157,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build Storybook
-        run: bun run build-storybook
+        run: bun run build-storybook -- --stats-json
 
       - name: Run Chromatic
         if: ${{ env.CHROMATIC_PROJECT_TOKEN != '' }}
