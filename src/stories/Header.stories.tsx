@@ -205,3 +205,20 @@ export const SkipNavFocused: Story = {
     },
   },
 };
+
+export const MobileHamburger: Story = {
+  globals: {
+    viewport: { value: "mobile2", isRotated: false },
+  },
+  parameters: {
+    viewport: { defaultViewport: "mobile2" },
+    docs: {
+      description: {
+        story: "At ≤640px the hamburger toggle appears. Click it to open/close the nav drawer. Press Escape or click outside to close.",
+      },
+    },
+  },
+  args: {
+    stickyHeader: true,
+  },
+};

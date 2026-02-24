@@ -196,6 +196,32 @@ export const MobileLayout: Story = {
   ),
 };
 
+export const MobileHamburger: Story = {
+  globals: {
+    viewport: { value: "mobile2", isRotated: false },
+  },
+  parameters: {
+    viewport: { defaultViewport: "mobile2" },
+  },
+  render: () => (
+    <div style={shellRootStyle}>
+      <style>{`.storybook-sticky-header{position:sticky;top:0;left:0;right:0;width:100%;z-index:40;}`}</style>
+      <Header
+        className="storybook-sticky-header"
+        details={fullDetails}
+        theme={{ socialIconSize: "2.2rem", ctaLayout: "inline" }}
+      />
+      <main id="main-content" style={{ ...shellMainStyle, padding: "1rem 0.9rem" }}>
+        <h1 style={shellHeadingStyle}>Mobile hamburger nav</h1>
+        <p style={shellParagraphStyle}>
+          Tap the ☰ button to open the nav drawer. Tap again, press Escape, or tap outside to close.
+        </p>
+      </main>
+      <Footer details={fullDetails} theme={{ socialIconSize: "2.2rem", ctaLayout: "inline" }} />
+    </div>
+  ),
+};
+
 export const StickyHeaderScroll: Story = {
   render: () => (
     <div style={stickyViewportStyle}>

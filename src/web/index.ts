@@ -181,13 +181,63 @@ abstract class BaseBrandShellElement extends HTMLElementBase {
 }
 
 export class BrandHeaderElement extends BaseBrandShellElement {
+  private _menuOpen = false;
+  private _cleanupMenu: (() => void) | null = null;
+
+  disconnectedCallback() {
+    this._cleanupMenu?.();
+    this._cleanupMenu = null;
+  }
+
   protected build(
     details: BrandDetails,
     theme: BrandTheme | null,
     shellClass: string | null,
     linkFactory: ((options: LinkFactoryOptions) => HTMLAnchorElement) | null,
   ): HTMLElement {
-    return createHeader(details, theme, shellClass, linkFactory ?? undefined);
+    // Clean up previous event listeners before rebuilding
+    this._cleanupMenu?.();
+    this._cleanupMenu = null;
+
+    const header = createHeader(details, theme, shellClass, linkFactory ?? undefined, this._menuOpen);
+
+    const toggle = header.querySelector<HTMLButtonElement>(".brand-shell-header__menu-toggle");
+    if (toggle) {
+      const onToggle = () => {
+        this._menuOpen = !this._menuOpen;
+        toggle.setAttribute("aria-expanded", String(this._menuOpen));
+        toggle.setAttribute("aria-label", this._menuOpen ? "Close menu" : "Open menu");
+      };
+
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && this._menuOpen) {
+          this._menuOpen = false;
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.setAttribute("aria-label", "Open menu");
+          toggle.focus();
+        }
+      };
+
+      const onPointerDown = (e: PointerEvent) => {
+        if (this._menuOpen && !header.contains(e.target as Node)) {
+          this._menuOpen = false;
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.setAttribute("aria-label", "Open menu");
+        }
+      };
+
+      toggle.addEventListener("click", onToggle);
+      document.addEventListener("keydown", onKeyDown);
+      document.addEventListener("pointerdown", onPointerDown);
+
+      this._cleanupMenu = () => {
+        toggle.removeEventListener("click", onToggle);
+        document.removeEventListener("keydown", onKeyDown);
+        document.removeEventListener("pointerdown", onPointerDown);
+      };
+    }
+
+    return header;
   }
 }
 
@@ -292,6 +342,7 @@ function createHeader(
   theme: BrandTheme | null,
   shellClass: string | null,
   linkFactory?: (options: LinkFactoryOptions) => HTMLAnchorElement,
+  menuOpen = false,
 ): HTMLElement {
   const header = document.createElement("header");
   header.className = joinClassNames("brand-shell-header", shellClass);
@@ -321,10 +372,30 @@ function createHeader(
   }
   inner.append(identity);
 
-  const actions = document.createElement("div");
-  actions.className = "brand-shell-header__actions";
-
   const { navLinks, ctaLinks, socialLinks } = buildShellViewModel(details);
+  const hasNavContent = navLinks.length > 0 || ctaLinks.length > 0 || socialLinks.length > 0;
+
+  if (hasNavContent) {
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "brand-shell-header__menu-toggle";
+    toggle.setAttribute("aria-label", menuOpen ? "Close menu" : "Open menu");
+    toggle.setAttribute("aria-expanded", String(menuOpen));
+    toggle.setAttribute("aria-controls", "brand-shell-nav-drawer");
+
+    const icon = document.createElement("span");
+    icon.className = "brand-shell-header__menu-icon";
+    icon.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 3; i++) {
+      icon.append(document.createElement("span"));
+    }
+    toggle.append(icon);
+    inner.append(toggle);
+  }
+
+  const actions = document.createElement("div");
+  actions.id = "brand-shell-nav-drawer";
+  actions.className = "brand-shell-header__actions";
 
   if (navLinks.length > 0) {
     actions.append(createNav(navLinks, "brand-shell-header", "Primary", linkFactory));

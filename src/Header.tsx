@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
 import type { BrandDetails, BrandTheme } from "./types";
 import {
   assertValidBrandDetails,
@@ -49,6 +49,34 @@ export function Header({ details, theme, className, renderLink }: HeaderProps) {
   const { navLinks, ctaLinks, socialLinks } = buildShellViewModelFromNormalized(normalizedDetails);
   const combinedClassName = ["brand-shell-header", className].filter(Boolean).join(" ");
 
+  const hasNavContent = navLinks.length > 0 || ctaLinks.length > 0 || socialLinks.length > 0;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen, closeMenu]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        closeMenu();
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [menuOpen, closeMenu]);
+
   const LinkEl = renderLink
     ? renderLink
     : ({ href, className: cls, "aria-label": ariaLabel, target, rel, children }: LinkRenderProps) => (
@@ -79,11 +107,27 @@ export function Header({ details, theme, className, renderLink }: HeaderProps) {
   );
 
   return (
-    <header className={combinedClassName} data-brand-cta-layout={ctaLayout} style={style} role="banner">
+    <header ref={headerRef} className={combinedClassName} data-brand-cta-layout={ctaLayout} style={style} role="banner">
       <a href="#main-content" className="brand-shell-skip-nav">Skip to main content</a>
       <div className="brand-shell-header__inner">
         {brandIdentity}
-        <div className="brand-shell-header__actions">
+        {hasNavContent && (
+          <button
+            type="button"
+            className="brand-shell-header__menu-toggle"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="brand-shell-nav-drawer"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <span className="brand-shell-header__menu-icon" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+        )}
+        <div id="brand-shell-nav-drawer" className="brand-shell-header__actions">
           {navLinks.length > 0 && (
             <nav className="brand-shell-header__nav" aria-label="Primary">
               <ul className="brand-shell-header__list">
