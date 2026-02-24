@@ -195,3 +195,13 @@ export const WithLogoAndCustomHeight: Story = {
     },
   },
 };
+
+export const SkipNavFocused: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: "Tab once after load to reveal the skip navigation link. Pressing Enter jumps focus to `#main-content`.",
+      },
+    },
+  },
+};

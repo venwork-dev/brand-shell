@@ -68,6 +68,7 @@ export function validateBrandDetails(details: unknown): BrandValidationResult<No
   validateOptionalString(details.logoSrc, "details.logoSrc", errors);
   validateSafeHref(details.logoSrc, "details.logoSrc", errors);
   validateOptionalString(details.logoAlt, "details.logoAlt", errors);
+  validateOptionalString(details.copyrightText, "details.copyrightText", errors);
 
   if (details.navLinks != null) {
     if (!Array.isArray(details.navLinks)) {

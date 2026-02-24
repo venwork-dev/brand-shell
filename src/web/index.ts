@@ -299,6 +299,12 @@ function createHeader(
   applyThemeVariables(header, theme);
   header.dataset.brandCtaLayout = resolveCtaLayout(theme);
 
+  const skipNav = document.createElement("a");
+  skipNav.href = "#main-content";
+  skipNav.className = "brand-shell-skip-nav";
+  skipNav.textContent = "Skip to main content";
+  header.append(skipNav);
+
   const inner = document.createElement("div");
   inner.className = "brand-shell-header__inner";
 
@@ -394,7 +400,7 @@ function createFooter(
     top.append(createSocialLinks(socialLinks, "brand-shell-footer__social", "brand-shell-footer__social-link"));
   }
 
-  const copy = createParagraph("brand-shell-footer__copy", `© ${new Date().getFullYear()} ${details.name}`);
+  const copy = createParagraph("brand-shell-footer__copy", details.copyrightText ?? `© ${new Date().getFullYear()} ${details.name}`);
 
   inner.append(top, copy);
   footer.append(inner);

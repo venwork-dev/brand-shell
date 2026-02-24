@@ -139,6 +139,26 @@ describe("validateBrandDetails", () => {
     expect(result.normalized?.logoSrc).toBe("https://example.com/logo.png");
     expect(result.normalized?.logoAlt).toBeUndefined();
   });
+
+  it("accepts copyrightText and passes it through normalized", () => {
+    const result = validateBrandDetails({
+      name: "Acme Corp",
+      copyrightText: "© 2026 Acme Corp. All rights reserved.",
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.normalized?.copyrightText).toBe("© 2026 Acme Corp. All rights reserved.");
+  });
+
+  it("rejects empty copyrightText", () => {
+    const result = validateBrandDetails({
+      name: "Acme Corp",
+      copyrightText: "   ",
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("details.copyrightText must be a non-empty string when provided.");
+  });
 });
 
 describe("validateBrandTheme", () => {
