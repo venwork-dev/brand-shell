@@ -362,7 +362,16 @@ function createFooter(
     img.src = details.logoSrc;
     img.alt = details.logoAlt ?? details.name;
     img.className = "brand-shell-footer__logo";
-    brand.append(img);
+    if (details.homeHref) {
+      const identity = createAnchor(details.homeHref, "brand-shell-footer__name", details.name, `${details.name} home`, "_self", undefined, linkFactory);
+      identity.textContent = "";
+      identity.append(img);
+      brand.append(identity);
+    } else {
+      brand.append(img);
+    }
+  } else if (details.homeHref) {
+    brand.append(createAnchor(details.homeHref, "brand-shell-footer__name", details.name, `${details.name} home`, "_self", undefined, linkFactory));
   } else {
     brand.append(createParagraph("brand-shell-footer__name", details.name));
   }
