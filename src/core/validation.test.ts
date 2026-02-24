@@ -46,6 +46,24 @@ describe("validateBrandDetails", () => {
     expect(result.errors).toContain("details.primaryAction.target must be one of: _blank, _self, _parent, _top.");
   });
 
+  it("allows data:image/ URIs for logoSrc and rejects other data: URIs", () => {
+    const validResult = validateBrandDetails({
+      name: "Brand Shell",
+      logoSrc: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E",
+    });
+    expect(validResult.valid).toBe(true);
+    expect(validResult.normalized?.logoSrc).toBeDefined();
+
+    const invalidResult = validateBrandDetails({
+      name: "Brand Shell",
+      logoSrc: "data:text/html,<h1>xss</h1>",
+    });
+    expect(invalidResult.valid).toBe(false);
+    expect(invalidResult.errors).toContain(
+      "details.logoSrc must use a safe URL/path (http, https, mailto, tel, or relative path).",
+    );
+  });
+
   it("rejects unsafe href protocols", () => {
     const result = validateBrandDetails({
       name: "Brand Shell",

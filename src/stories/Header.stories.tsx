@@ -168,3 +168,30 @@ export const MobileStackedCtas: Story = {
     },
   },
 };
+
+// Inline SVG logo — no network dependency, works in Chromatic
+const svgLogoSrc =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 32'%3E%3Crect width='120' height='32' rx='6' fill='%230ea5e9'/%3E%3Ctext x='10' y='22' font-family='system-ui%2C sans-serif' font-size='14' font-weight='700' fill='%23fff'%3EBrandShell%3C/text%3E%3C/svg%3E";
+
+export const WithLogo: Story = {
+  args: {
+    details: {
+      ...sampleDetails,
+      logoSrc: svgLogoSrc,
+      logoAlt: "Brand Shell",
+    },
+  },
+};
+
+export const WithLogoAndCustomHeight: Story = {
+  args: {
+    details: {
+      ...sampleDetails,
+      logoSrc: svgLogoSrc,
+      logoAlt: "Brand Shell",
+    },
+    theme: {
+      logoHeight: "1.75rem",
+    },
+  },
+};

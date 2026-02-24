@@ -446,6 +446,8 @@
 .brand-shell-footer__name {
   font-size: 1rem;
   font-weight: 600;
+  color: var(--_text);
+  text-decoration: none;
   margin: 0 0 var(--brand-space-sm) 0;
 }
 

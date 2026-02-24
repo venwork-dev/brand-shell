@@ -16,6 +16,9 @@ export function normalizeSafeHref(href: unknown): string | undefined {
   }
 
   const protocol = `${schemeMatch[1]?.toLowerCase()}:`;
+  if (protocol === "data:") {
+    return trimmed.startsWith("data:image/") ? trimmed : undefined;
+  }
   if (!ALLOWED_PROTOCOLS.has(protocol)) {
     return undefined;
   }
