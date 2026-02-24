@@ -116,6 +116,77 @@ describe("web adapter smoke", () => {
     expect(attrs["shell-class"]).toBe("shell-attrs");
   });
 
+  it("renders hamburger toggle button when header has nav content", () => {
+    registerBrandShellElements();
+
+    const header = document.createElement("brand-header");
+    header.setAttribute("details", JSON.stringify({
+      name: "Brand Shell",
+      navLinks: [{ label: "Docs", href: "/docs" }],
+    }));
+    document.body.append(header);
+
+    const toggle = header.querySelector<HTMLButtonElement>(".brand-shell-header__menu-toggle");
+    expect(toggle).not.toBeNull();
+    expect(toggle?.getAttribute("aria-expanded")).toBe("false");
+    expect(toggle?.getAttribute("aria-label")).toBe("Open menu");
+    expect(toggle?.getAttribute("aria-controls")).toBe("brand-shell-nav-drawer");
+
+    const drawer = header.querySelector("#brand-shell-nav-drawer");
+    expect(drawer).not.toBeNull();
+  });
+
+  it("toggles aria-expanded on hamburger button click", () => {
+    registerBrandShellElements();
+
+    const header = document.createElement("brand-header");
+    header.setAttribute("details", JSON.stringify({
+      name: "Brand Shell",
+      navLinks: [{ label: "Docs", href: "/docs" }],
+    }));
+    document.body.append(header);
+
+    const toggle = header.querySelector<HTMLButtonElement>(".brand-shell-header__menu-toggle")!;
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+
+    toggle.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(toggle.getAttribute("aria-label")).toBe("Close menu");
+
+    toggle.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(toggle.getAttribute("aria-label")).toBe("Open menu");
+  });
+
+  it("closes hamburger menu on Escape key", () => {
+    registerBrandShellElements();
+
+    const header = document.createElement("brand-header");
+    header.setAttribute("details", JSON.stringify({
+      name: "Brand Shell",
+      navLinks: [{ label: "Docs", href: "/docs" }],
+    }));
+    document.body.append(header);
+
+    const toggle = header.querySelector<HTMLButtonElement>(".brand-shell-header__menu-toggle")!;
+    toggle.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("does not render hamburger toggle when header has no nav content", () => {
+    registerBrandShellElements();
+
+    const header = document.createElement("brand-header");
+    header.setAttribute("details", JSON.stringify({ name: "Brand Shell" }));
+    document.body.append(header);
+
+    const toggle = header.querySelector(".brand-shell-header__menu-toggle");
+    expect(toggle).toBeNull();
+  });
+
   it("supports custom tag names", () => {
     const names = registerBrandShellElements({
       headerTagName: "brand-header-smoke",
